@@ -124,7 +124,8 @@ gh repo delete opencode-github-test --yes
 
 若要刪除本機測試資料夾：
 ```bash
-rm -rf ~/Documents/opencode-github-test
+test_dir="$HOME/Documents/opencode-github-test"
+[ "$test_dir" = "$HOME/Documents/opencode-github-test" ] && rm -rf "$test_dir"
 ```
 
 ---

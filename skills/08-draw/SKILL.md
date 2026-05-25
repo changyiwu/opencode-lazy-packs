@@ -15,12 +15,13 @@ description: 安裝 AI 生圖技能（OpenAI gpt-image-2）。說「安裝生圖
 
 ### 1. 複製技能檔案
 ```bash
-# 從本 repo 下載 draw.py
+mkdir -p ~/.config/opencode/skills/draw
 curl -o ~/.config/opencode/skills/draw/SKILL.md https://raw.githubusercontent.com/mathruffian-dot/opencode-lazy-packs/main/skills/08-draw/SKILL.md
+curl -o ~/.config/opencode/skills/draw/draw.py https://raw.githubusercontent.com/mathruffian-dot/opencode-lazy-packs/main/scripts/draw.py
 ```
 
 ### 2. 確認 draw.py 位置
-確保 `~/.claude/skills/draw/draw.py` 已存在（若無則從 Claude Code 技能目錄複製）。
+確保 `~/.config/opencode/skills/draw/draw.py` 已存在。不要從 Claude Code 的 `~/.claude/skills/` 混用，避免不同工具版本互相覆蓋。
 
 ### 3. 設定 opencode.json 權限
 ```json
@@ -29,7 +30,7 @@ curl -o ~/.config/opencode/skills/draw/SKILL.md https://raw.githubusercontent.co
 
 ### 4. 測試
 ```bash
-python ~/.claude/skills/draw/draw.py "一隻橘貓坐在窗邊，水彩風格" --name test --quality low
+python ~/.config/opencode/skills/draw/draw.py "一隻橘貓坐在窗邊，水彩風格" --name test --quality low
 ```
 
 ### 使用方式
