@@ -33,14 +33,15 @@ opencode-lazy-packs/
 
 - Obsidian vault：`C:\Users\chang\我的雲端硬碟\2ndbrain`
 - 每日筆記：`每日筆記/<日期>.md`
-- 創作庫：`創作庫/opencode-lazy-packs/`
+- 創作庫：`創作庫/`
+- 專案駕駛艙：`opencode-lazy-packs-專案駕駛艙.md`
 - 知識庫：`知識庫/`
 
 ## 同步對照表
 
 | 平台 | 位置 |
 |------|------|
-| Obsidian 閱讀版 | `2ndbrain/創作庫/opencode-lazy-packs/` |
+| Obsidian 閱讀版 | `opencode-lazy-packs-專案駕駛艙.md` |
 | GitHub (origin) | `changyiwu/opencode-lazy-packs` |
 | GitHub (upstream) | `mathruffian-dot/opencode-lazy-packs` |
 | 本機路徑 | `C:\Users\chang\我的雲端硬碟\agents\opencode-lazy-packs` |
