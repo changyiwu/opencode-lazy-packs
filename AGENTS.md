@@ -41,7 +41,8 @@ opencode-lazy-packs/
 | 平台 | 位置 |
 |------|------|
 | Obsidian 閱讀版 | `2ndbrain/創作庫/opencode-lazy-packs/` |
-| GitHub 版 | `mathruffian-dot/opencode-lazy-packs` |
+| GitHub (origin) | `changyiwu/opencode-lazy-packs` |
+| GitHub (upstream) | `mathruffian-dot/opencode-lazy-packs` |
 | 本機路徑 | `C:\Users\chang\我的雲端硬碟\agents\opencode-lazy-packs` |
 
 ## 工作流程提醒
