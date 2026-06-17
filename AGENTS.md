@@ -35,6 +35,7 @@ opencode-lazy-packs/
 - 每日筆記：`每日筆記/<日期>.md`
 - 創作庫：`創作庫/`
 - 專案駕駛艙：`opencode-lazy-packs-專案駕駛艙.md`
+- 收工注意：檢查 `.openai.env` 是否被 git 追蹤（敏感金鑰）
 - 知識庫：`知識庫/`
 
 ## 同步對照表
