@@ -1,6 +1,6 @@
 # OpenCode 懶人包 #01：連接 NotebookLM
 
-> 版本：v0.3
+> 版本：v0.4
 > 更新日期：2026-07-17
 
 ## 這個懶人包會幫你做什麼？
@@ -53,8 +53,9 @@ nlm doctor
 
 ```bash
 nlm setup add opencode
-nlm skill install opencode
 ```
+
+不要執行 `nlm skill install opencode`。該指令會額外建立 `~/.config/opencode/skills/nlm-skill/`；NotebookLM MCP 已由 `nlm setup add opencode` 提供，不需要再安裝這個額外 Skill。
 
 若自動設定失敗，再編輯 `~/.config/opencode/opencode.json`，將 MCP server 指向 `notebooklm-mcp`，不是 `nlm`：
 
@@ -85,6 +86,7 @@ opencode mcp list
 
 ```bash
 nlm setup remove opencode
+nlm skill uninstall opencode  # 只有先前曾安裝 nlm-skill 時才需要
 uv tool uninstall notebooklm-mcp-cli
 ```
 
@@ -107,6 +109,7 @@ uv tool uninstall notebooklm-mcp-cli
 
 | 日期 | 版本 | 更新內容 |
 |------|------|---------|
+| 2026-07-17 | v0.4 | OpenCode 僅設定 NotebookLM MCP，不再額外安裝 nlm-skill |
 | 2026-07-17 | v0.3 | 改用 notebooklm-mcp、nlm setup/skill 的 OpenCode 支援，移除過時 EXE 與指令說明 |
 | 2026-06-12 | v0.2 | 改用 uv tool、補 doctor 與復原流程 |
 | 2026-05-19 | v0.1 | 初版 |

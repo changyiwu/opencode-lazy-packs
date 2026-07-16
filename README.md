@@ -8,23 +8,13 @@
 
 在本 repo 根目錄執行：
 
-```bash
-npx skills add . --skill '*' --agent opencode --global --copy --yes
-```
-
-或直接從 GitHub 安裝：
-
-```bash
-npx skills add mathruffian-dot/opencode-lazy-packs --skill '*' --agent opencode --global --copy --yes
-```
-
-`npx skills` 可能先把共用副本放在 `~/.agents/skills/`。再執行同步腳本，將 00～09 全部安裝到 OpenCode 專用全域目錄：
-
 ```powershell
-powershell -ExecutionPolicy Bypass -File "skills/09-install-all/install-opencode-skills.ps1" -Force
+powershell -ExecutionPolicy Bypass -File "skills/09-install-all/install-opencode-skills.ps1" -SourceRoot "skills" -Force
 ```
 
-接著載入 `09-install-all`，再逐項執行 00～08 的實際工具與 MCP 設定。
+這會直接把 00～09 安裝到 `~/.config/opencode/skills/`，不會在 `~/.agents/skills/` 留下本懶人包副本。接著載入 `09-install-all`，再逐項執行 00～08 的實際工具與 MCP 設定。
+
+若無法從完整 repo 執行，`09-install-all` 才會暫用 `npx skills` 取得來源；同步成功後會自動清除 `~/.agents/skills/` 中的 00～09。
 
 ### 方式二：請 AI 協助選擇
 
@@ -52,15 +42,15 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent
 | Skill | 版本 | 用途 |
 |-------|------|------|
 | `00-env-setup` | v0.4 | Node.js LTS、OpenCode、uv、模型登入 |
-| `01-notebooklm` | v0.3 | NotebookLM CLI、MCP 與官方提供的 OpenCode setup |
+| `01-notebooklm` | v0.4 | NotebookLM CLI 與 MCP；不額外安裝 nlm-skill |
 | `02-github` | v0.2 | Git、GitHub CLI、登入與選用 push 測試 |
 | `03-obsidian` | v0.3 | 使用 MCPVault 連接 Obsidian |
 | `04-second-brain` | v0.3 | 建立每日筆記／創作庫／知識庫三層結構 |
 | `05-firebase` | v0.2 | Firebase CLI 與限定目錄／功能的 MCP |
 | `06-browser` | v0.4 | Playwright MCP 與 open-computer-use |
 | `07-workflow-skills` | v0.2 | 安裝 startup、shutdown、project-init 完整 Skills |
-| `08-draw` | v0.4 | 使用 GPT Image 2 生圖 |
-| `09-install-all` | v0.3 | 強制長駐安裝 00–09，再逐項執行 00–08 |
+| `08-draw` | v0.5 | OpenCode 專用 GPT Image 2 生圖，禁止跨用 Codex Skill |
+| `09-install-all` | v0.4 | 直接安裝至 OpenCode 專用目錄並清除 .agents 副本 |
 
 ## 對應教學
 
@@ -80,12 +70,11 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent
 
 - 全域設定：`~/.config/opencode/opencode.json`
 - OpenCode 專用全域 Skills：`~/.config/opencode/skills/<name>/SKILL.md`
-- skills CLI 管理副本：`~/.agents/skills/<name>/SKILL.md`（可以保留）
 - 專案規則：`AGENTS.md`
 - MCP 管理：`opencode mcp add`、`opencode mcp list`
 - 模型登入：`opencode auth login`、`opencode auth list`
 
-完整安裝後，`~/.config/opencode/skills/` 應直接包含 00～09 共 10 個編號 Skills；執行 `07-workflow-skills` 後還會多出 `startup`、`shutdown`、`project-init`。因此使用者只需要檢查這個 OpenCode 專用目錄。
+完整安裝後，`~/.config/opencode/skills/` 應只包含本懶人包預期的 13 個 Skills：00～09，加上 `startup`、`shutdown`、`project-init`。流程不安裝 `nlm-skill`，也不在 `~/.agents/skills/` 留下 00～09。
 
 Windows 原生環境可使用；需要最佳相容性時，OpenCode 官方建議使用 WSL。教學已將 PowerShell 與 Bash 分開標示。
 

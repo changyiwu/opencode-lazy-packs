@@ -1,8 +1,9 @@
 [CmdletBinding()]
 param(
-    [string]$SourceRoot = (Join-Path $HOME ".agents\skills"),
+    [string]$SourceRoot,
     [string]$TargetRoot = (Join-Path $HOME ".config\opencode\skills"),
-    [switch]$Force
+    [switch]$Force,
+    [switch]$KeepManagedSource
 )
 
 $ErrorActionPreference = "Stop"
@@ -20,15 +21,40 @@ $expectedSkills = @(
     "09-install-all"
 )
 
-if (-not (Test-Path -LiteralPath $SourceRoot -PathType Container)) {
-    throw "Skills source directory not found: $SourceRoot. Run the global npx skills install first."
+$managedSourceRoot = Join-Path $HOME ".agents\skills"
+$scriptSkillRoot = Split-Path -Parent $PSCommandPath
+$scriptSkillsRoot = Split-Path -Parent $scriptSkillRoot
+
+if ([string]::IsNullOrWhiteSpace($SourceRoot)) {
+    $hasSiblingSkills = $true
+    foreach ($name in $expectedSkills) {
+        if (-not (Test-Path -LiteralPath (Join-Path $scriptSkillsRoot "$name\SKILL.md") -PathType Leaf)) {
+            $hasSiblingSkills = $false
+            break
+        }
+    }
+
+    if ($hasSiblingSkills) {
+        $SourceRoot = $scriptSkillsRoot
+    } elseif (Test-Path -LiteralPath $managedSourceRoot -PathType Container) {
+        $SourceRoot = $managedSourceRoot
+    } else {
+        throw "Skills source directory was not found. Run this script from a complete repo or provide -SourceRoot."
+    }
 }
 
+if (-not (Test-Path -LiteralPath $SourceRoot -PathType Container)) {
+    throw "Skills source directory not found: $SourceRoot"
+}
+
+$sourceRootPath = (Resolve-Path -LiteralPath $SourceRoot).Path.TrimEnd('\', '/')
 New-Item -ItemType Directory -Path $TargetRoot -Force | Out-Null
+$targetRootPath = (Resolve-Path -LiteralPath $TargetRoot).Path.TrimEnd('\', '/')
+$copyRequired = -not $sourceRootPath.Equals($targetRootPath, [StringComparison]::OrdinalIgnoreCase)
 
 foreach ($name in $expectedSkills) {
-    $sourceSkill = Join-Path $SourceRoot $name
-    $targetSkill = Join-Path $TargetRoot $name
+    $sourceSkill = Join-Path $sourceRootPath $name
+    $targetSkill = Join-Path $targetRootPath $name
     $sourceManifest = Join-Path $sourceSkill "SKILL.md"
 
     if (-not (Test-Path -LiteralPath $sourceManifest -PathType Leaf)) {
@@ -54,20 +80,22 @@ foreach ($name in $expectedSkills) {
         throw "$name has $($changedFiles.Count) different file(s). Add -Force after approving overwrite."
     }
 
-    New-Item -ItemType Directory -Path $targetSkill -Force | Out-Null
-    foreach ($sourceFile in $sourceFiles) {
-        $relativePath = $sourceFile.FullName.Substring($sourceSkill.Length).TrimStart('\', '/')
-        $targetFile = Join-Path $targetSkill $relativePath
-        $targetDirectory = Split-Path -Parent $targetFile
-        New-Item -ItemType Directory -Path $targetDirectory -Force | Out-Null
-        Copy-Item -LiteralPath $sourceFile.FullName -Destination $targetFile -Force
+    if ($copyRequired) {
+        New-Item -ItemType Directory -Path $targetSkill -Force | Out-Null
+        foreach ($sourceFile in $sourceFiles) {
+            $relativePath = $sourceFile.FullName.Substring($sourceSkill.Length).TrimStart('\', '/')
+            $targetFile = Join-Path $targetSkill $relativePath
+            $targetDirectory = Split-Path -Parent $targetFile
+            New-Item -ItemType Directory -Path $targetDirectory -Force | Out-Null
+            Copy-Item -LiteralPath $sourceFile.FullName -Destination $targetFile -Force
+        }
     }
 }
 
 $verificationErrors = New-Object System.Collections.Generic.List[string]
 foreach ($name in $expectedSkills) {
-    $sourceSkill = Join-Path $SourceRoot $name
-    $targetSkill = Join-Path $TargetRoot $name
+    $sourceSkill = Join-Path $sourceRootPath $name
+    $targetSkill = Join-Path $targetRootPath $name
     foreach ($sourceFile in Get-ChildItem -LiteralPath $sourceSkill -Recurse -File -Force) {
         $relativePath = $sourceFile.FullName.Substring($sourceSkill.Length).TrimStart('\', '/')
         $targetFile = Join-Path $targetSkill $relativePath
@@ -87,4 +115,27 @@ if ($verificationErrors.Count -gt 0) {
     throw "Sync verification failed: $($verificationErrors -join '; ')"
 }
 
-Write-Host "Sync complete: 10 skills installed to $TargetRoot" -ForegroundColor Green
+$removedManagedSkills = New-Object System.Collections.Generic.List[string]
+if (-not $KeepManagedSource -and (Test-Path -LiteralPath $managedSourceRoot -PathType Container)) {
+    foreach ($name in $expectedSkills) {
+        $managedSkill = Join-Path $managedSourceRoot $name
+        if (Test-Path -LiteralPath $managedSkill -PathType Container) {
+            Remove-Item -LiteralPath $managedSkill -Recurse -Force
+            $removedManagedSkills.Add($name)
+        }
+    }
+
+    if (@(Get-ChildItem -LiteralPath $managedSourceRoot -Force).Count -eq 0) {
+        Remove-Item -LiteralPath $managedSourceRoot -Force
+        $managedParent = Split-Path -Parent $managedSourceRoot
+        if ((Test-Path -LiteralPath $managedParent -PathType Container) -and
+            @(Get-ChildItem -LiteralPath $managedParent -Force).Count -eq 0) {
+            Remove-Item -LiteralPath $managedParent -Force
+        }
+    }
+}
+
+Write-Host "Sync complete: 10 skills installed to $targetRootPath" -ForegroundColor Green
+if ($removedManagedSkills.Count -gt 0) {
+    Write-Host "Cleaned managed copies from ~/.agents/skills: $($removedManagedSkills -join ', ')" -ForegroundColor Green
+}

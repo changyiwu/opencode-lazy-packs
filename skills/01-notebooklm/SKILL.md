@@ -29,8 +29,9 @@ nlm doctor
 
 ```bash
 nlm setup add opencode
-nlm skill install opencode
 ```
+
+不要執行 `nlm skill install opencode`。它會額外建立 `~/.config/opencode/skills/nlm-skill/`，但 MCP 連線不需要這個 Skill。若先前已安裝，可執行 `nlm skill uninstall opencode` 移除。
 
 若自動設定不可用，先找 MCP server 路徑：
 

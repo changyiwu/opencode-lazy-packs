@@ -140,6 +140,11 @@ foreach ($requiredIgnore in @("generated/", ".openai.env", ".agents/skills/", "/
     }
 }
 
+$drawSkillContent = Get-Content -LiteralPath "skills/08-draw/SKILL.md" -Raw -Encoding UTF8
+if (-not $drawSkillContent.Contains('~/.codex/skills/codex-draw')) {
+    Add-ValidationError "08-draw is missing the cross-agent isolation guard for codex-draw."
+}
+
 $installAll = Get-Content -LiteralPath "skills/09-install-all/SKILL.md" -Raw -Encoding UTF8
 foreach ($requiredInstallToken in @("--skill '*'", "--agent opencode", "--global", "--copy", "--yes")) {
     if (-not $installAll.Contains($requiredInstallToken)) {
@@ -165,6 +170,10 @@ if (-not (Test-Path -LiteralPath $syncScript -PathType Leaf)) {
     if (-not $syncContent.Contains('.config\opencode\skills')) {
         Add-ValidationError "OpenCode global sync script does not target ~/.config/opencode/skills."
     }
+    if (-not $syncContent.Contains('.agents\skills') -or
+        -not $syncContent.Contains('Remove-Item -LiteralPath $managedSkill')) {
+        Add-ValidationError "OpenCode global sync script does not clean its managed ~/.agents/skills copies."
+    }
     $parseTokens = $null
     $parseErrors = $null
     [void][System.Management.Automation.Language.Parser]::ParseFile(
@@ -179,6 +188,7 @@ if (-not (Test-Path -LiteralPath $syncScript -PathType Leaf)) {
 
 $forbiddenChecks = @(
     @{ Pattern = '"command": \["<nlm.+>", "--transport", "stdio"\]'; Message = "Obsolete nlm MCP command remains." },
+    @{ Pattern = '^\s*nlm skill install opencode\s*$'; Message = "NotebookLM setup still installs the extra nlm-skill." },
     @{ Pattern = 'type %USERPROFILE%\\\.openai\.env'; Message = "A command still prints the complete .openai.env file." },
     @{ Pattern = '^### .+two.+manual download'; Message = "README still has a duplicate method-two heading." }
 )
@@ -190,14 +200,22 @@ foreach ($check in $forbiddenChecks) {
     }
 }
 
-$canonicalDraw = (Get-FileHash -LiteralPath "scripts/draw.py" -Algorithm SHA256).Hash
-$installedDraw = (Get-FileHash -LiteralPath "skills/08-draw/draw.py" -Algorithm SHA256).Hash
-if ($canonicalDraw -ne $installedDraw) {
-    Add-ValidationError "scripts/draw.py and skills/08-draw/draw.py are out of sync."
+$drawFiles = @("scripts/draw.py", "skills/08-draw/draw.py")
+$missingDrawFiles = @($drawFiles | Where-Object { -not (Test-Path -LiteralPath $_ -PathType Leaf) })
+if ($missingDrawFiles.Count -gt 0) {
+    foreach ($missingDrawFile in $missingDrawFiles) {
+        Add-ValidationError "Missing draw asset: $missingDrawFile"
+    }
+} else {
+    $canonicalDraw = (Get-Content -LiteralPath "scripts/draw.py" -Raw -Encoding UTF8).Replace("`r`n", "`n")
+    $installedDraw = (Get-Content -LiteralPath "skills/08-draw/draw.py" -Raw -Encoding UTF8).Replace("`r`n", "`n")
+    if ($canonicalDraw -ne $installedDraw) {
+        Add-ValidationError "scripts/draw.py and skills/08-draw/draw.py are out of sync."
+    }
 }
 
 $python = Get-Command "python" -ErrorAction SilentlyContinue
-if ($python) {
+if ($python -and $missingDrawFiles.Count -eq 0) {
     & $python.Source -c "import ast,pathlib; [ast.parse(pathlib.Path(p).read_text(encoding='utf-8')) for p in ('scripts/draw.py','skills/08-draw/draw.py')]"
     if ($LASTEXITCODE -ne 0) {
         Add-ValidationError "draw.py Python syntax validation failed."

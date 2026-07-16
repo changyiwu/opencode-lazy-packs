@@ -4,31 +4,15 @@
 
 「全部安裝」表示 `00-env-setup` 到 `09-install-all` 共 10 個編號 Skills 都必須保留在 OpenCode 支援的全域目錄，不能只執行設定後留下 `draw`、`startup`、`shutdown`、`project-init`。
 
-在本 repo 根目錄執行：
-
-```bash
-npx skills add . --skill '*' --agent opencode --global --copy --yes
-```
-
-從 GitHub 直接安裝：
-
-```bash
-npx skills add mathruffian-dot/opencode-lazy-packs --skill '*' --agent opencode --global --copy --yes
-```
-
-驗證：
-
-```bash
-npx skills ls --global --agent opencode
-```
-
-`npx skills` 可能先將共用副本放在 `~/.agents/skills/`。接著執行本 repo 隨附的同步腳本，把 00～09 全部放進 OpenCode 專用目錄：
+在本 repo 根目錄直接同步，不經過 skills CLI 的共用目錄：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File "skills/09-install-all/install-opencode-skills.ps1" -Force
+powershell -ExecutionPolicy Bypass -File "skills/09-install-all/install-opencode-skills.ps1" -SourceRoot "skills" -Force
 ```
 
-`~/.agents/skills/` 中由 CLI 管理的副本可以保留。最終必須在 `~/.config/opencode/skills/` 看到 00～09 全部 10 個目錄；執行 07 後還應另外看到 `startup`、`shutdown`、`project-init`，因此完整流程通常至少有 13 個相關 Skills。
+最終必須在 `~/.config/opencode/skills/` 看到 00～09 全部 10 個目錄，且 `~/.agents/skills/` 不得留下本懶人包副本。執行 07 後還應另外看到 `startup`、`shutdown`、`project-init`，完整結果為 13 個相關 Skills。
+
+若沒有完整 repo，才使用 `npx skills` 取得暫存來源；完成同步後，隨附腳本會刪除 `~/.agents/skills/` 中的 00～09，並在目錄變空時一併移除空目錄。
 
 ## 可用項目
 
@@ -43,12 +27,12 @@ powershell -ExecutionPolicy Bypass -File "skills/09-install-all/install-opencode
 | 06 | `06-browser` | Playwright 與桌面控制 | Node.js |
 | 07 | `07-workflow-skills` | startup、shutdown、project-init | Git；Obsidian 選用 |
 | 08 | `08-draw` | GPT Image 2 生圖 | uv、OpenAI API key |
-| 09 | `09-install-all` | 逐項安裝 00–08 | 無 |
+| 09 | `09-install-all` | 安裝 00–09 至 OpenCode 專用目錄並清除暫存副本 | 無 |
 
 ## 執行方式
 
 1. 先列出上表，讓使用者選擇。
-2. 使用者選「全部」時，先用上方單一指令將 00–09 全部長駐安裝，再逐項說明並確認是否執行 00–08；不可把一次確認擴張成登入、建立遠端資源或刪除測試資料的授權。
+2. 使用者選「全部」時，先用上方同步腳本將 00–09 全部長駐安裝，再逐項說明並確認是否執行 00–08；不可把一次確認擴張成登入、建立遠端資源或刪除測試資料的授權。
 3. 使用者只選部分項目時，對每個選取的 Skill 執行：
 
 ```bash
