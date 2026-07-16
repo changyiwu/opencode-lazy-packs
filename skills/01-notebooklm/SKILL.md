@@ -1,5 +1,5 @@
 ---
-name: opencode-notebooklm
+name: 01-notebooklm
 description: 連接 NotebookLM，讓 OpenCode 讀寫 Google NotebookLM 筆記本。說「連接 NotebookLM」「裝 NotebookLM」時載入。
 ---
 
@@ -25,23 +25,28 @@ nlm login
 nlm doctor
 ```
 
-### 3. 找到執行檔路徑
-- Windows: `where.exe nlm`
-- macOS/Linux: `which nlm`
+### 3. 自動設定 OpenCode MCP
 
-> ⚠️ 路徑陷阱：不要用 `.local\bin\notebooklm-mcp.EXE`（已損壞的獨立 exe），要用 pip/uv 安裝的路徑（如 `Python3xx\Scripts\notebooklm-mcp.exe`）。
+```bash
+nlm setup add opencode
+nlm skill install opencode
+```
 
-### 4. 寫入 opencode.json
-編輯 `~/.config/opencode/opencode.json`，在 `mcp` 區塊加入：
+若自動設定不可用，先找 MCP server 路徑：
+
+- Windows：`where.exe notebooklm-mcp`
+- macOS/Linux：`which notebooklm-mcp`
+
+再於 `opencode.json` 的 `mcp` 區塊加入：
 ```json
 "notebooklm": {
   "type": "local",
-  "command": ["<nlm完整路徑>", "--transport", "stdio"],
+  "command": ["<notebooklm-mcp完整路徑>"],
   "enabled": true
 }
 ```
 
 ### 5. 驗證
-重啟 OpenCode，問：「請列出我所有的 NotebookLM 筆記本。」
+執行 `opencode mcp list`，確認 NotebookLM 已連線，再重啟 OpenCode 並問：「請列出我所有的 NotebookLM 筆記本。」
 
 回報格式：nlm 版本、登入狀態（nlm doctor）、MCP 設定、筆記本讀取測試結果。

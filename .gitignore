@@ -19,10 +19,14 @@ package-lock.json
 dist/
 build/
 .cache/
+generated/
+__pycache__/
+*.pyc
 
 # 敏感資料
 .env
 .env.*
+.openai.env
 *.key
 credentials.*
 secrets.*

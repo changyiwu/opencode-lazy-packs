@@ -1,169 +1,74 @@
 # OpenCode 懶人包 #03：建立第二大腦 Obsidian
 
-> 版本：v0.2
-> 更新日期：2026-05-25
-
----
+> 版本：v0.3
+> 更新日期：2026-07-17
 
 ## 這個懶人包會幫你做什麼？
 
-讓 OpenCode 可以讀寫你的 Obsidian 筆記本：
-- 找到 Obsidian vault 位置
-- 安裝 MCPVault（@bitbonsai/mcpvault）
-- 寫入 opencode.json MCP 設定
-- 驗證讀寫
+找到主要 Obsidian vault，使用 `@bitbonsai/mcpvault` 連接 OpenCode，並驗證讀寫。
 
----
+## 步驟一：確認 vault
 
-## 先備條件
+先詢問使用者主要 vault 的完整路徑。只有在使用者不知道時才搜尋含 `.obsidian` 的資料夾，並限制搜尋範圍，避免從整顆磁碟遞迴掃描。
 
-- [ ] Node.js 18+ 已安裝
-- [ ] 已有 Obsidian vault
+Windows PowerShell 範例：
 
----
-
-## 請 OpenCode 幫我執行以下步驟
-
-### 步驟一：找到使用者的 Obsidian vault
-
-先問使用者筆記本位置。常見位置：
-
-| 同步方式 | 常見路徑 |
-|----------|----------|
-| OneDrive | `C:\Users\<你>\OneDrive\文件\<vault名稱>` |
-| Google Drive | `G:\我的雲端硬碟\<vault名稱>` |
-| Documents | `C:\Users\<你>\Documents\<vault名稱>` |
-
-如果不知道，可搜尋：
-```bash
-# Windows（PowerShell）
-Get-ChildItem -Path "$env:USERPROFILE\OneDrive" -Recurse -Directory -Force |
-  Where-Object { Test-Path (Join-Path $_.FullName ".obsidian") }
+```powershell
+Get-ChildItem -LiteralPath "$HOME/OneDrive" -Directory -Recurse -Force -ErrorAction SilentlyContinue |
+  Where-Object { Test-Path -LiteralPath (Join-Path $_.FullName ".obsidian") }
 ```
 
-確認條件：
-- 資料夾存在
-- 裡面有 `.obsidian` 子資料夾
-- 使用者確認這是主要筆記本
+使用者必須確認找到的是主要 vault。
 
----
+## 步驟二：設定 MCP
 
-### 步驟二：安裝 mcpvault
-
-```bash
-npm install -g @bitbonsai/mcpvault
-```
-
-確認安裝位置：
-```bash
-# Windows
-where.exe mcpvault
-
-# macOS / Linux
-which mcpvault
-```
-
----
-
-### 步驟三：寫入 OpenCode MCP 設定
-
-編輯 `~/.config/opencode/opencode.json`，加入：
+不需要全域安裝 mcpvault。編輯 `~/.config/opencode/opencode.json`，安全合併：
 
 ```json
 {
+  "$schema": "https://opencode.ai/config.json",
   "mcp": {
     "obsidian": {
       "type": "local",
-      "command": ["npx", "@bitbonsai/mcpvault", "<VAULT_PATH>"],
+      "command": ["npx", "-y", "@bitbonsai/mcpvault@latest", "<VAULT_PATH>"],
       "enabled": true
     }
   }
 }
 ```
 
-Windows 範例：
-```json
-{
-  "mcp": {
-    "obsidian": {
-      "type": "local",
-      "command": ["npx", "@bitbonsai/mcpvault", "C:\\Users\\mathr\\OneDrive\\文件\\Secondbrain"],
-      "enabled": true
-    }
-  }
-}
+Windows JSON 路徑中的反斜線必須寫成 `\\`。不得覆蓋既有 MCP 或 permission 設定。
+
+## 步驟三：驗證
+
+```bash
+opencode mcp list
 ```
 
----
+重新開啟 OpenCode，先列出 vault 根目錄，再於使用者同意後建立一則測試筆記。測試完成後詢問是否刪除。
 
-### 步驟四：驗證連線
+## 安全提醒
 
-重新開啟 OpenCode，然後問它：
-
-```
-請列出我的 Obsidian vault 根目錄的資料夾。
-```
-
-再測試寫入：
-
-```
-請在我的 Obsidian 建立一則測試筆記，內容寫「OpenCode 已成功連接 Obsidian」。
-```
-
----
+- MCPVault 能讀寫整個指定 vault，只能連接使用者確認的路徑。
+- 大量修改或刪除筆記前必須先列出範圍並取得確認。
+- 不把 Local REST API key 寫入教學、Git 或對話回報。
 
 ## 完成回報格式
 
 ```md
 ## Obsidian 連接完成
 
-- Vault 路徑：<VAULT_PATH>
-- mcpvault：已安裝 / 未安裝
-- MCP 設定：已寫入 opencode.json
+- Vault：完整路徑
+- MCP：已連線 / 失敗
 - 讀取測試：成功 / 失敗
-- 寫入測試：成功 / 失敗
+- 寫入測試：成功 / 未執行
+- 測試筆記：未建立 / 保留 / 已依指示刪除
 ```
-
----
-
-## 進階：CLI-Anything Obsidian CLI
-
-若需要全文檢索、metadata 操作、tag 管理、筆記分析等進階功能，可安裝 CLI-Anything 的 Obsidian CLI：
-
-### 前置需求
-1. 在 Obsidian 內安裝 [Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api) 社群插件
-2. 插件設定中啟用 HTTPS（非必要）並記下 API key
-
-### 安裝
-```bash
-pip install cli-anything-hub
-cli-hub install obsidian
-```
-
-### 使用範例
-```bash
-cli-anything-obsidian search "SKILL.md"
-cli-anything-obsidian tag list
-cli-anything-obsidian note get "專案工作流程.md"
-```
-
-> 💡 mcpvault（本懶人包預設方案）適合基本讀寫；Obsidian CLI 適合需要查詢、分析、批量操作的情境。兩者可並存。
-
----
-
-## 常見問題
-
-| 問題 | 解法 |
-|------|------|
-| `npm install -g` 出現 EPERM | Windows 以系統管理員身分執行 |
-| 找不到 vault | 搜尋 `.obsidian` 資料夾位置 |
-| opencode.json 格式錯誤 | JSON 最後一項不能有逗號，路徑雙引號 |
-
----
 
 ## 更新紀錄
 
 | 日期 | 版本 | 更新內容 |
 |------|------|---------|
-| 2026-05-25 | v0.2 | 補充 CLI-Anything Obsidian CLI 進階方案 |
+| 2026-07-17 | v0.3 | 改用免全域安裝的 npx -y @latest、補 MCP 驗證與測試筆記清理確認 |
+| 2026-05-25 | v0.2 | 補充 CLI-Anything 進階方案 |
 | 2026-05-19 | v0.1 | 初版 |

@@ -1,41 +1,41 @@
 ---
-name: opencode-workflow-skills
-description: 安裝開工/收工/初始化三大技能。說「裝工作流程技能」「安裝 startup shutdown skills」時載入。
+name: 07-workflow-skills
+description: 安裝完整的 startup、shutdown、project-init 三個 OpenCode Skills。說「裝工作流程技能」時載入。
 ---
 
-# 開工/收工/初始化技能
+# 安裝工作流程 Skills
 
-安裝三個全域 OpenCode 技能：startup、shutdown、project-init。
+本 Skill 隨附：
+
+```text
+assets/startup/SKILL.md
+assets/shutdown/SKILL.md
+assets/project-init/SKILL.md
+```
 
 ## 步驟
 
-### 1. 建立技能目錄
-```bash
-mkdir -p ~/.config/opencode/skills/startup
-mkdir -p ~/.config/opencode/skills/shutdown
-mkdir -p ~/.config/opencode/skills/project-init
-```
+1. 找到本 Skill 的實際安裝目錄，確認三個 assets 都存在。
+2. 檢查 `~/.config/opencode/skills/startup/`、`shutdown/`、`project-init/` 是否已有內容。
+3. 若目標已存在，先比較差異並詢問使用者，不得直接覆蓋。
+4. 使用目前作業系統的原生檔案工具，將三個完整資料夾複製到 `~/.config/opencode/skills/`。
+5. 確認每個目標資料夾都有完整 `SKILL.md`，且 frontmatter name 與目錄相同。
 
-### 2. 建立三個 SKILL.md
-- **startup**：說「開工」→ 讀 Obsidian 工作筆記 + 檢查 Git
-- **shutdown**：說「收工」→ Git commit/push + Obsidian 同步 + chezmoi
-- **project-init**：說「初始化專案」→ AGENTS.md + Git + GitHub + Obsidian
+若使用者有自訂 Skill 權限，安全合併：
 
-（完整內容見原懶人包 #07）
-
-### 3. 設定 opencode.json 權限
 ```json
-"permission": {
-  "skill": {
-    "startup": "allow",
-    "shutdown": "allow",
-    "project-init": "allow",
-    "*": "ask"
+{
+  "permission": {
+    "skill": {
+      "*": "ask",
+      "startup": "allow",
+      "shutdown": "allow",
+      "project-init": "allow"
+    }
   }
 }
 ```
 
-### 4. 驗證
-重啟 OpenCode 後說「開工」。
+重新開啟 OpenCode 後說「開工」。正確驗證只讀取規則與 Git 狀態，不修改檔案。
 
-回報格式：三個技能路徑、opencode.json 權限設定、驗證結果。
+回報三個來源、目標、覆蓋或保留決定，以及驗證結果。

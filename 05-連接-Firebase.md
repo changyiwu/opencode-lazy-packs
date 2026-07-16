@@ -1,122 +1,84 @@
 # OpenCode 懶人包 #05：連接 Firebase
 
-> 版本：v0.1
-> 更新日期：2026-05-19
-
----
+> 版本：v0.2
+> 更新日期：2026-07-17
 
 ## 這個懶人包會幫你做什麼？
 
-讓 OpenCode 可以管理 Firebase：
-- 安裝 Firebase CLI
-- 登入 Google 帳號
-- 建立或選擇 Firebase 專案
-- 寫入 opencode.json MCP 設定
-- 驗證 CRUD
+安裝 Firebase CLI、登入帳號，並連接 Firebase 官方 MCP server。連接 MCP 本身不會自動初始化或修改專案。
 
----
-
-## 先備條件
-
-- [ ] Node.js 18+ 已安裝
-- [ ] 已有 Google 帳號
-
----
-
-## 請 OpenCode 幫我執行以下步驟
-
-### 步驟一：安裝 Firebase CLI
+## 步驟一：安裝與登入
 
 ```bash
 npm install -g firebase-tools
-```
-
-確認版本：
-```bash
 firebase --version
-```
-
----
-
-### 步驟二：登入 Firebase
-
-```bash
 firebase login
-```
-
-瀏覽器會開啟 Google 登入頁面。
-
-登入後檢查可用專案：
-```bash
 firebase projects:list
 ```
 
----
+登入需要使用者完成瀏覽器操作。
 
-### 步驟三：初始化 Firebase 專案
+## 步驟二：確認使用範圍
 
-在專案目錄執行：
-```bash
-firebase init
-```
+先詢問：
 
-選擇需要的服務（Firestore、Hosting 等）。
+- 要連接哪一個本機專案目錄？
+- 是否已有 `firebase.json`？
+- 只需要哪些功能，例如 auth、firestore、storage？
 
----
+如果只是列出 Firebase 專案，可以不指定 `--dir`。如果要操作特定 app，應使用絕對路徑限制目錄。
 
-### 步驟四：寫入 OpenCode MCP 設定
+## 步驟三：設定 OpenCode MCP
 
-編輯 `~/.config/opencode/opencode.json`，加入：
+可先使用 `opencode mcp add` 的互動式流程。手動設定範例：
 
 ```json
 {
+  "$schema": "https://opencode.ai/config.json",
   "mcp": {
     "firebase": {
       "type": "local",
-      "command": ["npx", "-y", "firebase-tools@latest", "mcp"],
+      "command": [
+        "npx", "-y", "firebase-tools@latest", "mcp",
+        "--dir", "<專案絕對路徑>",
+        "--only", "auth,firestore,storage"
+      ],
       "enabled": true
     }
   }
 }
 ```
 
----
+依使用者需求移除不需要的 `--dir` 或調整 `--only`，並安全合併既有 JSON。
 
-### 步驟五：驗證連線
+## 步驟四：驗證
 
-重新開啟 OpenCode，然後問它：
-
-```
-請列出我的 Firebase 專案。
+```bash
+opencode mcp list
 ```
 
----
+重新開啟 OpenCode，先要求列出 Firebase 專案。不要把 CRUD、部署或 `firebase init` 當成連線測試。
+
+## 初始化是另一個動作
+
+只有使用者明確要求，而且已確認工作目錄、Firebase 專案與服務清單時，才執行 `firebase init` 或 MCP 的初始化工具。重新初始化既有功能可能覆寫設定，必須先檢查 diff。
 
 ## 完成回報格式
 
 ```md
 ## Firebase 連接完成
 
-- firebase-tools 版本：xxx
-- 登入狀態：成功 / 失敗
-- 可用專案：xxx 個
-- MCP 設定：已寫入 opencode.json
-- 工具測試：成功 / 失敗
+- firebase-tools：版本
+- 登入：成功 / 失敗
+- MCP：已連線 / 失敗
+- 專案目錄：未指定 / 完整路徑
+- 功能限制：全部 / auth,firestore,...
+- 初始化：未執行 / 已另行確認
 ```
-
----
-
-## 常見問題
-
-| 問題 | 解法 |
-|------|------|
-| `firebase login` 瀏覽器不開 | 手動執行，或檢查防火牆 |
-| opencode.json 路徑錯誤 | 確認 `~/.config/opencode/opencode.json` 存在 |
-
----
 
 ## 更新紀錄
 
 | 日期 | 版本 | 更新內容 |
 |------|------|---------|
+| 2026-07-17 | v0.2 | 拆開 MCP 連線與 firebase init，補 --dir、--only 與安全確認 |
 | 2026-05-19 | v0.1 | 初版 |

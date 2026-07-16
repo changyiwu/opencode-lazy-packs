@@ -1,97 +1,93 @@
 # OpenCode 懶人包
 
-> 每份 MD 檔丟給 OpenCode 就能自動完成設定。
-> OpenAI Codex 或 Claude Code 的用戶請看對應的懶人包。
+一套給 OpenCode 使用者的繁體中文環境、MCP 與工作流程 Skills。每個項目可獨立安裝；涉及軟體安裝、登入、遠端建立或刪除時會逐步詢問。
 
----
+## 快速開始
 
-## 使用方式
+### 方式一：請 AI 協助選擇
 
-### 方式一：直接叫 AI 幫你裝（最簡單）
+把以下內容貼給 OpenCode：
 
-把這行貼給你的 AI agent：
-
-```
-這是 OpenCode 懶人包全集 https://github.com/mathruffian-dot/opencode-lazy-packs
-請讀取 repo 內容，列出所有可用的懶人包，問我要裝哪些。
+```text
+這是 OpenCode 懶人包：https://github.com/mathruffian-dot/opencode-lazy-packs
+請先讀取 INSTALL.md，列出所有項目，逐項問我要安裝哪些；不要一次執行未確認的安裝或登入。
 ```
 
-AI 會自動：
-1. 讀取 repo 的 `SKILL.md`（安裝入口）
-2. 列出 10 個懶人包
-3. 問你要裝哪些（可以選「全部」或特定編號）
-4. 自動安裝你選的項目
-
-### 方式二：一行指令手動裝
+### 方式二：安裝指定 Skill
 
 ```bash
-npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名> -g -y
+npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent opencode --global --copy --yes
 ```
 
-可用的 skill 名：
+`--agent opencode` 可避免安裝到錯誤的代理工具，`--copy` 可降低 Windows 或雲端同步資料夾的連結問題。
 
-| Skill 名 | 對應懶人包 |
-|----------|-----------|
-| `00-env-setup` | 環境建置 |
-| `01-notebooklm` | 連接 NotebookLM |
-| `02-github` | 連接 GitHub |
-| `03-obsidian` | 連接 Obsidian |
-| `04-second-brain` | 第二大腦設定 |
-| `05-firebase` | 連接 Firebase |
-| `06-browser` | 瀏覽器控制 |
-| `07-workflow-skills` | 開工/收工技能 |
-| `08-draw` | 生圖技能 |
-| `09-install-all` | 一次全部安裝 |
+### 方式三：閱讀單章教學
 
-安裝後對 OpenCode 說該技能對應的關鍵字即可啟動。
+下載對應 MD 檔，在目標專案啟動 `opencode`，把內容交給 OpenCode。仍應逐項確認安裝、登入與刪除操作。
 
-### 方式二：手動下載 MD 檔
+## Skills 清單
 
-1. 看影片了解原理
-2. 下載對應的懶人包（MD 檔）
-3. 開啟終端機，在專案目錄執行 `opencode`
-4. 把懶人包內容丟給 OpenCode，它會自動執行
+| Skill | 版本 | 用途 |
+|-------|------|------|
+| `00-env-setup` | v0.4 | Node.js LTS、OpenCode、uv、模型登入 |
+| `01-notebooklm` | v0.3 | NotebookLM CLI、MCP 與官方提供的 OpenCode setup |
+| `02-github` | v0.2 | Git、GitHub CLI、登入與選用 push 測試 |
+| `03-obsidian` | v0.3 | 使用 MCPVault 連接 Obsidian |
+| `04-second-brain` | v0.3 | 建立每日筆記／創作庫／知識庫三層結構 |
+| `05-firebase` | v0.2 | Firebase CLI 與限定目錄／功能的 MCP |
+| `06-browser` | v0.4 | Playwright MCP 與 open-computer-use |
+| `07-workflow-skills` | v0.2 | 安裝 startup、shutdown、project-init 完整 Skills |
+| `08-draw` | v0.4 | 使用 GPT Image 2 生圖 |
+| `09-install-all` | v0.2 | 逐項確認並安裝 00–08 |
 
----
+## 對應教學
 
-## 為什麼有這份？
+| 編號 | 文件 |
+|------|------|
+| 00 | [環境建置](00-環境建置.md) |
+| 01 | [連接 NotebookLM](01-連接-NotebookLM.md) |
+| 02 | [連接 GitHub](02-連接-GitHub.md) |
+| 03 | [建立第二大腦 Obsidian](03-建立第二大腦-Obsidian.md) |
+| 04 | [第二大腦設定指南](04-第二大腦設定指南.md) |
+| 05 | [連接 Firebase](05-連接-Firebase.md) |
+| 06 | [安裝瀏覽器控制](06-安裝瀏覽器控制.md) |
+| 07 | [開工／收工／初始化技能](07-開工收工初始化技能.md) |
+| 08 | [生圖技能](08-生圖.md) |
 
-原本的懶人包是給 Claude Code 和 OpenAI Codex 用的。OpenCode 是第三個 AI 編碼代理工具，設定方式與前兩者不同：
+## OpenCode 路徑
 
-| 差異 | OpenCode | Claude Code | OpenAI Codex |
-|------|----------|-------------|--------------|
-| 安裝 | `npm install -g opencode-ai` | `npm install -g @anthropic-ai/claude-code` | `npm install -g @openai/codex` |
-| 全域設定 | `~/.config/opencode/opencode.json` | `~/.claude/settings.json` | `~/.codex/config.toml` |
-| 專案指令檔 | `AGENTS.md` | `CLAUDE.md` | `AGENTS.md` |
-| MCP 配置 | 編輯 opencode.json | `claude mcp add` | `codex mcp add` |
-| Skill 機制 | 原生支援（SKILL.md） | 原生支援 | Desktop 支援 |
-| 命令 | 有 `/` 內建命令 | 有 `/` 內建命令 | ❌ 沒有 |
+- 全域設定：`~/.config/opencode/opencode.json`
+- 全域 Skills：`~/.config/opencode/skills/<name>/SKILL.md`
+- 專案規則：`AGENTS.md`
+- MCP 管理：`opencode mcp add`、`opencode mcp list`
+- 模型登入：`opencode auth login`、`opencode auth list`
 
----
+Windows 原生環境可使用；需要最佳相容性時，OpenCode 官方建議使用 WSL。教學已將 PowerShell 與 Bash 分開標示。
 
-## 最低先備條件
+## 安全原則
 
-- [ ] Node.js 18+ 已安裝
-- [ ] 電腦有網路連線
+- 不輸出 API key、token 或憑證內容
+- `.openai.env`、`.env*`、credentials、secrets 不得進 Git
+- 建立或刪除測試 repo、NotebookLM notebook、Obsidian 筆記前先確認
+- Firebase 初始化、部署與資料寫入不是 MCP 連線測試
+- 瀏覽器或桌面工具在登入、送出、購買、刪除、發布前取得確認
 
----
+## 維護者驗證
 
-## 懶人包清單
+在 Windows PowerShell 執行：
 
-| 編號 | 名稱 | 對應影片 | 狀態 | 說明 |
-|------|------|---------|------|------|
-| 00 | [環境建置](00-環境建置.md) | — | v0.1 | 安裝 OpenCode、Node.js、Git、GitHub CLI、uv |
-| 01 | [連接 NotebookLM](01-連接-NotebookLM.md) | — | v0.1 | 安裝 NotebookLM MCP + 產生簡報與圖表 |
-| 02 | [連接 GitHub](02-連接-GitHub.md) | — | v0.1 | GitHub CLI 登入 + Pages 教材上線 |
-| 03 | [建立第二大腦 Obsidian](03-建立第二大腦-Obsidian.md) | — | v0.1 | Obsidian MCPVault 連接 |
-| 04 | [第二大腦設定指南](04-第二大腦設定指南.md) | — | v0.1 | 三層結構 + AGENTS.md + 模板 |
-| 05 | [連接 Firebase](05-連接-Firebase.md) | — | v0.1 | Firebase MCP 安裝 |
-| 06 | [安裝瀏覽器控制](06-安裝瀏覽器控制.md) | — | v0.1 | Playwright MCP + open-computer-use |
-| 07 | [開工/收工/初始化技能](07-開工收工初始化技能.md) | — | v0.1 | 全域三技能：startup、shutdown、project-init |
-| 08 | [生圖技能](08-生圖.md) | — | v0.1 | draw skill：OpenAI gpt-image-2 生圖 |
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/validate-lazy-pack.ps1
+```
 
----
+驗證 Skill 名稱與 frontmatter、Markdown 連結、版本、敏感資訊忽略規則、draw.py 同步與 Python 語法。
+
+## 儲存庫
+
+- 上游：`mathruffian-dot/opencode-lazy-packs`
+- 個人 fork：`changyiwu/opencode-lazy-packs`
+- 預設分支：`main`
 
 ## 授權
 
-MIT License，與 Claude Code / Codex 懶人包相同。
+MIT License。
