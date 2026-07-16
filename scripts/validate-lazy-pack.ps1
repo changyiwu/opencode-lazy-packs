@@ -85,7 +85,7 @@ foreach ($workflowSkill in @("startup", "shutdown", "project-init")) {
 }
 
 $markdownFiles = Get-ChildItem -LiteralPath $root -Recurse -File -Filter "*.md" |
-    Where-Object { $_.FullName -notmatch '[\\/]\.git[\\/]' }
+    Where-Object { $_.FullName -notmatch '[\\/]\.(git|agents)[\\/]' }
 
 foreach ($file in $markdownFiles) {
     $content = Get-Content -LiteralPath $file.FullName -Raw -Encoding UTF8
@@ -134,9 +134,46 @@ foreach ($skill in $expectedSkills[0..8]) {
 }
 
 $ignore = Get-Content -LiteralPath ".gitignore" -Encoding UTF8
-foreach ($requiredIgnore in @("generated/", ".openai.env")) {
+foreach ($requiredIgnore in @("generated/", ".openai.env", ".agents/skills/", "/skills-lock.json")) {
     if ($ignore -notcontains $requiredIgnore) {
         Add-ValidationError ".gitignore is missing $requiredIgnore"
+    }
+}
+
+$installAll = Get-Content -LiteralPath "skills/09-install-all/SKILL.md" -Raw -Encoding UTF8
+foreach ($requiredInstallToken in @("--skill '*'", "--agent opencode", "--global", "--copy", "--yes")) {
+    if (-not $installAll.Contains($requiredInstallToken)) {
+        Add-ValidationError "09-install-all is missing required install token: $requiredInstallToken"
+    }
+}
+foreach ($requiredSkill in $expectedSkills) {
+    if (-not $installAll.Contains($requiredSkill)) {
+        Add-ValidationError "09-install-all does not explicitly verify $requiredSkill."
+    }
+}
+
+$syncScript = "skills/09-install-all/install-opencode-skills.ps1"
+if (-not (Test-Path -LiteralPath $syncScript -PathType Leaf)) {
+    Add-ValidationError "Missing OpenCode global sync script: $syncScript"
+} else {
+    $syncContent = Get-Content -LiteralPath $syncScript -Raw -Encoding UTF8
+    foreach ($requiredSkill in $expectedSkills) {
+        if (-not $syncContent.Contains($requiredSkill)) {
+            Add-ValidationError "OpenCode global sync script is missing $requiredSkill."
+        }
+    }
+    if (-not $syncContent.Contains('.config\opencode\skills')) {
+        Add-ValidationError "OpenCode global sync script does not target ~/.config/opencode/skills."
+    }
+    $parseTokens = $null
+    $parseErrors = $null
+    [void][System.Management.Automation.Language.Parser]::ParseFile(
+        (Resolve-Path -LiteralPath $syncScript).Path,
+        [ref]$parseTokens,
+        [ref]$parseErrors
+    )
+    if ($parseErrors.Count -gt 0) {
+        Add-ValidationError "OpenCode global sync script has PowerShell syntax errors."
     }
 }
 

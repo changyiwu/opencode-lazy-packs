@@ -14,6 +14,8 @@ package-lock.json
 .codex/
 .opencode/
 .config/opencode/
+.agents/skills/
+/skills-lock.json
 
 # 建置輸出
 dist/

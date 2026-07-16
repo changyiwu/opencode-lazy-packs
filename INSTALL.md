@@ -1,5 +1,35 @@
 # OpenCode 懶人包安裝入口
 
+## 完整全域安裝
+
+「全部安裝」表示 `00-env-setup` 到 `09-install-all` 共 10 個編號 Skills 都必須保留在 OpenCode 支援的全域目錄，不能只執行設定後留下 `draw`、`startup`、`shutdown`、`project-init`。
+
+在本 repo 根目錄執行：
+
+```bash
+npx skills add . --skill '*' --agent opencode --global --copy --yes
+```
+
+從 GitHub 直接安裝：
+
+```bash
+npx skills add mathruffian-dot/opencode-lazy-packs --skill '*' --agent opencode --global --copy --yes
+```
+
+驗證：
+
+```bash
+npx skills ls --global --agent opencode
+```
+
+`npx skills` 可能先將共用副本放在 `~/.agents/skills/`。接著執行本 repo 隨附的同步腳本，把 00～09 全部放進 OpenCode 專用目錄：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "skills/09-install-all/install-opencode-skills.ps1" -Force
+```
+
+`~/.agents/skills/` 中由 CLI 管理的副本可以保留。最終必須在 `~/.config/opencode/skills/` 看到 00～09 全部 10 個目錄；執行 07 後還應另外看到 `startup`、`shutdown`、`project-init`，因此完整流程通常至少有 13 個相關 Skills。
+
 ## 可用項目
 
 | 編號 | Skill | 說明 | 前置需求 |
@@ -18,15 +48,15 @@
 ## 執行方式
 
 1. 先列出上表，讓使用者選擇。
-2. 即使使用者選「全部」，也要逐項說明並確認；不可把一次確認擴張成登入、建立遠端資源或刪除測試資料的授權。
-3. 對每個選取的 Skill 執行：
+2. 使用者選「全部」時，先用上方單一指令將 00–09 全部長駐安裝，再逐項說明並確認是否執行 00–08；不可把一次確認擴張成登入、建立遠端資源或刪除測試資料的授權。
+3. 使用者只選部分項目時，對每個選取的 Skill 執行：
 
 ```bash
 npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent opencode --global --copy --yes
 ```
 
-4. 安裝後載入該 Skill，依內容執行並驗證。
-5. 已安裝且驗證正常的項目可以跳過；回報跳過原因。
+4. 安裝後執行同步腳本，確認目標位於 `~/.config/opencode/skills/`，再載入該 Skill，依內容執行並驗證。
+5. 已安裝且驗證正常的外部工具可以跳過執行；編號 Skill 本身仍須保留在全域目錄。
 
 若 `npx skills` 無法使用，才改為讀取 repo 中對應的 `skills/<名稱>/SKILL.md`，並保留其附屬檔案與 assets；不能只複製摘要。
 

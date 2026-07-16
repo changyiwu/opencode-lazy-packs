@@ -4,7 +4,29 @@
 
 ## 快速開始
 
-### 方式一：請 AI 協助選擇
+### 方式一：完整安裝 00～09
+
+在本 repo 根目錄執行：
+
+```bash
+npx skills add . --skill '*' --agent opencode --global --copy --yes
+```
+
+或直接從 GitHub 安裝：
+
+```bash
+npx skills add mathruffian-dot/opencode-lazy-packs --skill '*' --agent opencode --global --copy --yes
+```
+
+`npx skills` 可能先把共用副本放在 `~/.agents/skills/`。再執行同步腳本，將 00～09 全部安裝到 OpenCode 專用全域目錄：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "skills/09-install-all/install-opencode-skills.ps1" -Force
+```
+
+接著載入 `09-install-all`，再逐項執行 00～08 的實際工具與 MCP 設定。
+
+### 方式二：請 AI 協助選擇
 
 把以下內容貼給 OpenCode：
 
@@ -13,7 +35,7 @@
 請先讀取 INSTALL.md，列出所有項目，逐項問我要安裝哪些；不要一次執行未確認的安裝或登入。
 ```
 
-### 方式二：安裝指定 Skill
+### 方式三：安裝指定 Skill
 
 ```bash
 npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent opencode --global --copy --yes
@@ -21,7 +43,7 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent
 
 `--agent opencode` 可避免安裝到錯誤的代理工具，`--copy` 可降低 Windows 或雲端同步資料夾的連結問題。
 
-### 方式三：閱讀單章教學
+### 方式四：閱讀單章教學
 
 下載對應 MD 檔，在目標專案啟動 `opencode`，把內容交給 OpenCode。仍應逐項確認安裝、登入與刪除操作。
 
@@ -38,7 +60,7 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent
 | `06-browser` | v0.4 | Playwright MCP 與 open-computer-use |
 | `07-workflow-skills` | v0.2 | 安裝 startup、shutdown、project-init 完整 Skills |
 | `08-draw` | v0.4 | 使用 GPT Image 2 生圖 |
-| `09-install-all` | v0.2 | 逐項確認並安裝 00–08 |
+| `09-install-all` | v0.3 | 強制長駐安裝 00–09，再逐項執行 00–08 |
 
 ## 對應教學
 
@@ -57,10 +79,13 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent
 ## OpenCode 路徑
 
 - 全域設定：`~/.config/opencode/opencode.json`
-- 全域 Skills：`~/.config/opencode/skills/<name>/SKILL.md`
+- OpenCode 專用全域 Skills：`~/.config/opencode/skills/<name>/SKILL.md`
+- skills CLI 管理副本：`~/.agents/skills/<name>/SKILL.md`（可以保留）
 - 專案規則：`AGENTS.md`
 - MCP 管理：`opencode mcp add`、`opencode mcp list`
 - 模型登入：`opencode auth login`、`opencode auth list`
+
+完整安裝後，`~/.config/opencode/skills/` 應直接包含 00～09 共 10 個編號 Skills；執行 `07-workflow-skills` 後還會多出 `startup`、`shutdown`、`project-init`。因此使用者只需要檢查這個 OpenCode 專用目錄。
 
 Windows 原生環境可使用；需要最佳相容性時，OpenCode 官方建議使用 WSL。教學已將 PowerShell 與 Bash 分開標示。
 
