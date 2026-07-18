@@ -1,5 +1,5 @@
 ---
-name: 07-workflow-skills
+name: opencode-workflow-skills
 description: 安裝完整的 startup、shutdown、project-init 三個 OpenCode Skills。說「裝工作流程技能」時載入。
 ---
 

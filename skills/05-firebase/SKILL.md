@@ -1,5 +1,5 @@
 ---
-name: 05-firebase
+name: opencode-firebase
 description: 連接 Firebase，讓 OpenCode 管理 Firestore / Hosting / Auth。說「連接 Firebase」「設定 Firebase」時載入。
 ---
 

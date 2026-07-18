@@ -1,5 +1,5 @@
 ---
-name: 02-github
+name: opencode-github
 description: 連接 GitHub，讓 OpenCode 管理 repo、commit、push。說「連接 GitHub」「設定 GitHub」時載入。
 ---
 

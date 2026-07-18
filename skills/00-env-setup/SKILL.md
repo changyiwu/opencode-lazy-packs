@@ -1,5 +1,5 @@
 ---
-name: 00-env-setup
+name: opencode-env-setup
 description: 安裝 OpenCode 開發環境（Node.js, OpenCode, uv）。說「建置環境」「安裝開發環境」時載入。
 ---
 
@@ -42,4 +42,4 @@ opencode auth login
 
 回報格式：已安裝 / 已補裝清單、版本號、模型供應商登入狀態。
 
-> Git、GitHub CLI 與 GitHub 登入由 `02-github` 負責。
+> Git、GitHub CLI 與 GitHub 登入由 `opencode-github` 負責。

@@ -1,5 +1,5 @@
 ---
-name: 03-obsidian
+name: opencode-obsidian
 description: 連接 Obsidian，讓 OpenCode 讀寫第二大腦筆記。說「連接 Obsidian」「設定 Obsidian vault」時載入。
 ---
 

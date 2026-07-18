@@ -16,18 +16,19 @@ function Add-ValidationWarning([string]$Message) {
     $script:warnings.Add($Message)
 }
 
-$expectedSkills = @(
-    "00-env-setup",
-    "01-notebooklm",
-    "02-github",
-    "03-obsidian",
-    "04-second-brain",
-    "05-firebase",
-    "06-browser",
-    "07-workflow-skills",
-    "08-draw",
-    "09-install-all"
+$skillMappings = @(
+    [pscustomobject]@{ SourceName = "00-env-setup"; InstalledName = "opencode-env-setup" },
+    [pscustomobject]@{ SourceName = "01-notebooklm"; InstalledName = "opencode-notebooklm" },
+    [pscustomobject]@{ SourceName = "02-github"; InstalledName = "opencode-github" },
+    [pscustomobject]@{ SourceName = "03-obsidian"; InstalledName = "opencode-obsidian" },
+    [pscustomobject]@{ SourceName = "04-second-brain"; InstalledName = "opencode-second-brain" },
+    [pscustomobject]@{ SourceName = "05-firebase"; InstalledName = "opencode-firebase" },
+    [pscustomobject]@{ SourceName = "06-browser"; InstalledName = "opencode-browser" },
+    [pscustomobject]@{ SourceName = "07-workflow-skills"; InstalledName = "opencode-workflow-skills" },
+    [pscustomobject]@{ SourceName = "08-draw"; InstalledName = "opencode-draw" },
+    [pscustomobject]@{ SourceName = "09-install-all"; InstalledName = "opencode-install-all" }
 )
+$expectedSourceSkills = @($skillMappings | ForEach-Object { $_.SourceName })
 
 if (Test-Path -LiteralPath "SKILL.md") {
     Add-ValidationError "Root SKILL.md hides nested skills from the npx skills CLI; use INSTALL.md instead."
@@ -41,7 +42,7 @@ $skillDirs = Get-ChildItem -LiteralPath "skills" -Directory |
     Sort-Object Name
 
 $actualSkills = @($skillDirs | ForEach-Object { $_.Name })
-if (($actualSkills -join "|") -ne ($expectedSkills -join "|")) {
+if (($actualSkills -join "|") -ne ($expectedSourceSkills -join "|")) {
     Add-ValidationError "Skill directories do not match the expected 00-09 set."
 }
 
@@ -60,8 +61,13 @@ foreach ($dir in $skillDirs) {
 
     $name = $Matches[1].Trim()
     $description = $Matches[2].Trim()
-    if ($name -ne $dir.Name) {
-        Add-ValidationError "$($dir.Name)/SKILL.md name '$name' must match the directory."
+    $mapping = $skillMappings | Where-Object { $_.SourceName -eq $dir.Name } | Select-Object -First 1
+    if (-not $mapping) {
+        Add-ValidationError "$($dir.Name)/SKILL.md does not have an install-name mapping."
+        continue
+    }
+    if ($name -ne $mapping.InstalledName) {
+        Add-ValidationError "$($dir.Name)/SKILL.md name '$name' must be '$($mapping.InstalledName)'."
     }
     if ($name -notmatch '^[a-z0-9]+(-[a-z0-9]+)*$') {
         Add-ValidationError "$($dir.Name)/SKILL.md has an invalid name."
@@ -124,12 +130,12 @@ Get-ChildItem -LiteralPath $root -File -Filter "*.md" |
     }
 
 $readme = Get-Content -LiteralPath "README.md" -Raw -Encoding UTF8
-foreach ($skill in $expectedSkills[0..8]) {
-    $number = $skill.Substring(0, 2)
+foreach ($mapping in $skillMappings[0..8]) {
+    $number = $mapping.SourceName.Substring(0, 2)
     $version = $chapterVersions[$number]
-    $expectedRowStart = "| ``$skill`` | $version |"
+    $expectedRowStart = "| ``$($mapping.InstalledName)`` | $version |"
     if (-not $readme.Contains($expectedRowStart)) {
-        Add-ValidationError "README skill table is missing $skill $version."
+        Add-ValidationError "README skill table is missing $($mapping.InstalledName) $version."
     }
 }
 
@@ -151,9 +157,9 @@ foreach ($requiredInstallToken in @("--skill '*'", "--agent opencode", "--global
         Add-ValidationError "09-install-all is missing required install token: $requiredInstallToken"
     }
 }
-foreach ($requiredSkill in $expectedSkills) {
-    if (-not $installAll.Contains($requiredSkill)) {
-        Add-ValidationError "09-install-all does not explicitly verify $requiredSkill."
+foreach ($mapping in $skillMappings) {
+    if (-not $installAll.Contains($mapping.InstalledName)) {
+        Add-ValidationError "opencode-install-all does not explicitly verify $($mapping.InstalledName)."
     }
 }
 
@@ -162,9 +168,10 @@ if (-not (Test-Path -LiteralPath $syncScript -PathType Leaf)) {
     Add-ValidationError "Missing OpenCode global sync script: $syncScript"
 } else {
     $syncContent = Get-Content -LiteralPath $syncScript -Raw -Encoding UTF8
-    foreach ($requiredSkill in $expectedSkills) {
-        if (-not $syncContent.Contains($requiredSkill)) {
-            Add-ValidationError "OpenCode global sync script is missing $requiredSkill."
+    foreach ($mapping in $skillMappings) {
+        if (-not $syncContent.Contains($mapping.SourceName) -or
+            -not $syncContent.Contains($mapping.InstalledName)) {
+            Add-ValidationError "OpenCode global sync script is missing the $($mapping.SourceName) to $($mapping.InstalledName) mapping."
         }
     }
     if (-not $syncContent.Contains('.config\opencode\skills')) {
@@ -236,4 +243,4 @@ if ($errors.Count -gt 0) {
     exit 1
 }
 
-Write-Host "Validation passed: 10 skills, Markdown, versions, ignore rules, and draw assets." -ForegroundColor Green
+Write-Host "Validation passed: 10 opencode-* skills, Markdown, versions, install mapping, ignore rules, and draw assets." -ForegroundColor Green

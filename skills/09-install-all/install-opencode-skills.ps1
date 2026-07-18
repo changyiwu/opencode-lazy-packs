@@ -8,27 +8,43 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$expectedSkills = @(
-    "00-env-setup",
-    "01-notebooklm",
-    "02-github",
-    "03-obsidian",
-    "04-second-brain",
-    "05-firebase",
-    "06-browser",
-    "07-workflow-skills",
-    "08-draw",
-    "09-install-all"
+$skillMappings = @(
+    [pscustomobject]@{ SourceName = "00-env-setup"; InstalledName = "opencode-env-setup" },
+    [pscustomobject]@{ SourceName = "01-notebooklm"; InstalledName = "opencode-notebooklm" },
+    [pscustomobject]@{ SourceName = "02-github"; InstalledName = "opencode-github" },
+    [pscustomobject]@{ SourceName = "03-obsidian"; InstalledName = "opencode-obsidian" },
+    [pscustomobject]@{ SourceName = "04-second-brain"; InstalledName = "opencode-second-brain" },
+    [pscustomobject]@{ SourceName = "05-firebase"; InstalledName = "opencode-firebase" },
+    [pscustomobject]@{ SourceName = "06-browser"; InstalledName = "opencode-browser" },
+    [pscustomobject]@{ SourceName = "07-workflow-skills"; InstalledName = "opencode-workflow-skills" },
+    [pscustomobject]@{ SourceName = "08-draw"; InstalledName = "opencode-draw" },
+    [pscustomobject]@{ SourceName = "09-install-all"; InstalledName = "opencode-install-all" }
 )
 
 $managedSourceRoot = Join-Path $HOME ".agents\skills"
 $scriptSkillRoot = Split-Path -Parent $PSCommandPath
 $scriptSkillsRoot = Split-Path -Parent $scriptSkillRoot
 
+function Find-SourceSkillPath {
+    param(
+        [string]$Root,
+        [object]$Mapping
+    )
+
+    foreach ($candidateName in @($Mapping.InstalledName, $Mapping.SourceName)) {
+        $candidatePath = Join-Path $Root $candidateName
+        if (Test-Path -LiteralPath (Join-Path $candidatePath "SKILL.md") -PathType Leaf) {
+            return $candidatePath
+        }
+    }
+
+    return $null
+}
+
 if ([string]::IsNullOrWhiteSpace($SourceRoot)) {
     $hasSiblingSkills = $true
-    foreach ($name in $expectedSkills) {
-        if (-not (Test-Path -LiteralPath (Join-Path $scriptSkillsRoot "$name\SKILL.md") -PathType Leaf)) {
+    foreach ($mapping in $skillMappings) {
+        if (-not (Find-SourceSkillPath -Root $scriptSkillsRoot -Mapping $mapping)) {
             $hasSiblingSkills = $false
             break
         }
@@ -50,17 +66,27 @@ if (-not (Test-Path -LiteralPath $SourceRoot -PathType Container)) {
 $sourceRootPath = (Resolve-Path -LiteralPath $SourceRoot).Path.TrimEnd('\', '/')
 New-Item -ItemType Directory -Path $TargetRoot -Force | Out-Null
 $targetRootPath = (Resolve-Path -LiteralPath $TargetRoot).Path.TrimEnd('\', '/')
-$copyRequired = -not $sourceRootPath.Equals($targetRootPath, [StringComparison]::OrdinalIgnoreCase)
 
-foreach ($name in $expectedSkills) {
-    $sourceSkill = Join-Path $sourceRootPath $name
-    $targetSkill = Join-Path $targetRootPath $name
-    $sourceManifest = Join-Path $sourceSkill "SKILL.md"
-
-    if (-not (Test-Path -LiteralPath $sourceManifest -PathType Leaf)) {
-        throw "Missing source skill: $sourceManifest"
+$sourceSkills = @{}
+foreach ($mapping in $skillMappings) {
+    $sourceSkill = Find-SourceSkillPath -Root $sourceRootPath -Mapping $mapping
+    if (-not $sourceSkill) {
+        throw "Missing source skill for $($mapping.InstalledName). Expected $($mapping.SourceName) or $($mapping.InstalledName) under $sourceRootPath."
     }
 
+    $sourceManifest = Join-Path $sourceSkill "SKILL.md"
+    $sourceContent = Get-Content -LiteralPath $sourceManifest -Raw -Encoding UTF8
+    $namePattern = '(?m)^name:\s*' + [regex]::Escape($mapping.InstalledName) + '\s*$'
+    if ($sourceContent -notmatch $namePattern) {
+        throw "$sourceManifest must declare name: $($mapping.InstalledName)"
+    }
+
+    $sourceSkills[$mapping.InstalledName] = $sourceSkill
+}
+
+foreach ($mapping in $skillMappings) {
+    $sourceSkill = $sourceSkills[$mapping.InstalledName]
+    $targetSkill = Join-Path $targetRootPath $mapping.InstalledName
     $sourceFiles = @(Get-ChildItem -LiteralPath $sourceSkill -Recurse -File -Force)
     $changedFiles = New-Object System.Collections.Generic.List[string]
 
@@ -77,10 +103,10 @@ foreach ($name in $expectedSkills) {
     }
 
     if ($changedFiles.Count -gt 0 -and -not $Force) {
-        throw "$name has $($changedFiles.Count) different file(s). Add -Force after approving overwrite."
+        throw "$($mapping.InstalledName) has $($changedFiles.Count) different file(s). Add -Force after approving overwrite."
     }
 
-    if ($copyRequired) {
+    if (-not $sourceSkill.Equals($targetSkill, [StringComparison]::OrdinalIgnoreCase)) {
         New-Item -ItemType Directory -Path $targetSkill -Force | Out-Null
         foreach ($sourceFile in $sourceFiles) {
             $relativePath = $sourceFile.FullName.Substring($sourceSkill.Length).TrimStart('\', '/')
@@ -93,20 +119,33 @@ foreach ($name in $expectedSkills) {
 }
 
 $verificationErrors = New-Object System.Collections.Generic.List[string]
-foreach ($name in $expectedSkills) {
-    $sourceSkill = Join-Path $sourceRootPath $name
-    $targetSkill = Join-Path $targetRootPath $name
+foreach ($mapping in $skillMappings) {
+    $sourceSkill = $sourceSkills[$mapping.InstalledName]
+    $targetSkill = Join-Path $targetRootPath $mapping.InstalledName
+    $targetManifest = Join-Path $targetSkill "SKILL.md"
+
+    if (-not (Test-Path -LiteralPath $targetManifest -PathType Leaf)) {
+        $verificationErrors.Add("$($mapping.InstalledName)/SKILL.md is missing")
+        continue
+    }
+
+    $targetContent = Get-Content -LiteralPath $targetManifest -Raw -Encoding UTF8
+    $namePattern = '(?m)^name:\s*' + [regex]::Escape($mapping.InstalledName) + '\s*$'
+    if ($targetContent -notmatch $namePattern) {
+        $verificationErrors.Add("$($mapping.InstalledName)/SKILL.md has the wrong name")
+    }
+
     foreach ($sourceFile in Get-ChildItem -LiteralPath $sourceSkill -Recurse -File -Force) {
         $relativePath = $sourceFile.FullName.Substring($sourceSkill.Length).TrimStart('\', '/')
         $targetFile = Join-Path $targetSkill $relativePath
         if (-not (Test-Path -LiteralPath $targetFile -PathType Leaf)) {
-            $verificationErrors.Add("$name/$relativePath is missing")
+            $verificationErrors.Add("$($mapping.InstalledName)/$relativePath is missing")
             continue
         }
         $sourceHash = (Get-FileHash -LiteralPath $sourceFile.FullName -Algorithm SHA256).Hash
         $targetHash = (Get-FileHash -LiteralPath $targetFile -Algorithm SHA256).Hash
         if ($sourceHash -ne $targetHash) {
-            $verificationErrors.Add("$name/$relativePath differs")
+            $verificationErrors.Add("$($mapping.InstalledName)/$relativePath differs")
         }
     }
 }
@@ -117,11 +156,13 @@ if ($verificationErrors.Count -gt 0) {
 
 $removedManagedSkills = New-Object System.Collections.Generic.List[string]
 if (-not $KeepManagedSource -and (Test-Path -LiteralPath $managedSourceRoot -PathType Container)) {
-    foreach ($name in $expectedSkills) {
-        $managedSkill = Join-Path $managedSourceRoot $name
-        if (Test-Path -LiteralPath $managedSkill -PathType Container) {
-            Remove-Item -LiteralPath $managedSkill -Recurse -Force
-            $removedManagedSkills.Add($name)
+    foreach ($mapping in $skillMappings) {
+        foreach ($managedName in @($mapping.SourceName, $mapping.InstalledName)) {
+            $managedSkill = Join-Path $managedSourceRoot $managedName
+            if (Test-Path -LiteralPath $managedSkill -PathType Container) {
+                Remove-Item -LiteralPath $managedSkill -Recurse -Force
+                $removedManagedSkills.Add($managedName)
+            }
         }
     }
 
@@ -135,7 +176,7 @@ if (-not $KeepManagedSource -and (Test-Path -LiteralPath $managedSourceRoot -Pat
     }
 }
 
-Write-Host "Sync complete: 10 skills installed to $targetRootPath" -ForegroundColor Green
+Write-Host "Sync complete: 10 opencode-* skills installed to $targetRootPath" -ForegroundColor Green
 if ($removedManagedSkills.Count -gt 0) {
     Write-Host "Cleaned managed copies from ~/.agents/skills: $($removedManagedSkills -join ', ')" -ForegroundColor Green
 }
