@@ -21,11 +21,10 @@ $skillMappings = @(
     [pscustomobject]@{ SourceName = "01-notebooklm"; InstalledName = "opencode-notebooklm" },
     [pscustomobject]@{ SourceName = "02-github"; InstalledName = "opencode-github" },
     [pscustomobject]@{ SourceName = "03-obsidian"; InstalledName = "opencode-obsidian" },
-    [pscustomobject]@{ SourceName = "04-second-brain"; InstalledName = "opencode-second-brain" },
-    [pscustomobject]@{ SourceName = "05-firebase"; InstalledName = "opencode-firebase" },
-    [pscustomobject]@{ SourceName = "06-browser"; InstalledName = "opencode-browser" },
-    [pscustomobject]@{ SourceName = "07-draw"; InstalledName = "opencode-draw" },
-    [pscustomobject]@{ SourceName = "08-install-all"; InstalledName = "opencode-install-all" }
+    [pscustomobject]@{ SourceName = "04-firebase"; InstalledName = "opencode-firebase" },
+    [pscustomobject]@{ SourceName = "05-browser"; InstalledName = "opencode-browser" },
+    [pscustomobject]@{ SourceName = "06-draw"; InstalledName = "opencode-draw" },
+    [pscustomobject]@{ SourceName = "07-install-all"; InstalledName = "opencode-install-all" }
 )
 $expectedSourceSkills = @($skillMappings | ForEach-Object { $_.SourceName })
 
@@ -35,6 +34,11 @@ if (Test-Path -LiteralPath "SKILL.md") {
 if (-not (Test-Path -LiteralPath "INSTALL.md")) {
     Add-ValidationError "Missing INSTALL.md entry guide."
 }
+foreach ($retiredPath in @("04-第二大腦設定指南.md", "skills/04-second-brain")) {
+    if (Test-Path -LiteralPath $retiredPath) {
+        Add-ValidationError "Retired second-brain content still exists: $retiredPath"
+    }
+}
 
 $skillDirs = Get-ChildItem -LiteralPath "skills" -Directory |
     Where-Object { $_.Name -match '^\d{2}-' } |
@@ -42,7 +46,7 @@ $skillDirs = Get-ChildItem -LiteralPath "skills" -Directory |
 
 $actualSkills = @($skillDirs | ForEach-Object { $_.Name })
 if (($actualSkills -join "|") -ne ($expectedSourceSkills -join "|")) {
-    Add-ValidationError "Skill directories do not match the expected 00-08 set."
+    Add-ValidationError "Skill directories do not match the expected 00-07 set."
 }
 
 foreach ($dir in $skillDirs) {
@@ -116,7 +120,7 @@ Get-ChildItem -LiteralPath $root -File -Filter "*.md" |
     }
 
 $readme = Get-Content -LiteralPath "README.md" -Raw -Encoding UTF8
-foreach ($mapping in $skillMappings[0..7]) {
+foreach ($mapping in $skillMappings[0..6]) {
     $number = $mapping.SourceName.Substring(0, 2)
     $version = $chapterVersions[$number]
     $expectedRowStart = "| ``$($mapping.InstalledName)`` | $version |"
@@ -132,15 +136,15 @@ foreach ($requiredIgnore in @("generated/", ".openai.env", ".agents/skills/", "/
     }
 }
 
-$drawSkillContent = Get-Content -LiteralPath "skills/07-draw/SKILL.md" -Raw -Encoding UTF8
+$drawSkillContent = Get-Content -LiteralPath "skills/06-draw/SKILL.md" -Raw -Encoding UTF8
 if (-not $drawSkillContent.Contains('~/.codex/skills/codex-draw')) {
-    Add-ValidationError "07-draw is missing the cross-agent isolation guard for codex-draw."
+    Add-ValidationError "06-draw is missing the cross-agent isolation guard for codex-draw."
 }
 
-$installAll = Get-Content -LiteralPath "skills/08-install-all/SKILL.md" -Raw -Encoding UTF8
+$installAll = Get-Content -LiteralPath "skills/07-install-all/SKILL.md" -Raw -Encoding UTF8
 foreach ($requiredInstallToken in @("--skill '*'", "--agent opencode", "--global", "--copy", "--yes")) {
     if (-not $installAll.Contains($requiredInstallToken)) {
-        Add-ValidationError "08-install-all is missing required install token: $requiredInstallToken"
+        Add-ValidationError "07-install-all is missing required install token: $requiredInstallToken"
     }
 }
 foreach ($mapping in $skillMappings) {
@@ -149,7 +153,7 @@ foreach ($mapping in $skillMappings) {
     }
 }
 
-$syncScript = "skills/08-install-all/install-opencode-skills.ps1"
+$syncScript = "skills/07-install-all/install-opencode-skills.ps1"
 if (-not (Test-Path -LiteralPath $syncScript -PathType Leaf)) {
     Add-ValidationError "Missing OpenCode global sync script: $syncScript"
 } else {
@@ -193,7 +197,7 @@ foreach ($check in $forbiddenChecks) {
     }
 }
 
-$drawFiles = @("scripts/draw.py", "skills/07-draw/draw.py")
+$drawFiles = @("scripts/draw.py", "skills/06-draw/draw.py")
 $missingDrawFiles = @($drawFiles | Where-Object { -not (Test-Path -LiteralPath $_ -PathType Leaf) })
 if ($missingDrawFiles.Count -gt 0) {
     foreach ($missingDrawFile in $missingDrawFiles) {
@@ -201,15 +205,15 @@ if ($missingDrawFiles.Count -gt 0) {
     }
 } else {
     $canonicalDraw = (Get-Content -LiteralPath "scripts/draw.py" -Raw -Encoding UTF8).Replace("`r`n", "`n")
-    $installedDraw = (Get-Content -LiteralPath "skills/07-draw/draw.py" -Raw -Encoding UTF8).Replace("`r`n", "`n")
+    $installedDraw = (Get-Content -LiteralPath "skills/06-draw/draw.py" -Raw -Encoding UTF8).Replace("`r`n", "`n")
     if ($canonicalDraw -ne $installedDraw) {
-        Add-ValidationError "scripts/draw.py and skills/07-draw/draw.py are out of sync."
+        Add-ValidationError "scripts/draw.py and skills/06-draw/draw.py are out of sync."
     }
 }
 
 $python = Get-Command "python" -ErrorAction SilentlyContinue
 if ($python -and $missingDrawFiles.Count -eq 0) {
-    & $python.Source -c "import ast,pathlib; [ast.parse(pathlib.Path(p).read_text(encoding='utf-8')) for p in ('scripts/draw.py','skills/07-draw/draw.py')]"
+    & $python.Source -c "import ast,pathlib; [ast.parse(pathlib.Path(p).read_text(encoding='utf-8')) for p in ('scripts/draw.py','skills/06-draw/draw.py')]"
     if ($LASTEXITCODE -ne 0) {
         Add-ValidationError "draw.py Python syntax validation failed."
     }
@@ -229,4 +233,4 @@ if ($errors.Count -gt 0) {
     exit 1
 }
 
-Write-Host "Validation passed: 9 opencode-* skills, Markdown, versions, install mapping, ignore rules, and draw assets." -ForegroundColor Green
+Write-Host "Validation passed: 8 opencode-* skills, Markdown, versions, install mapping, ignore rules, and draw assets." -ForegroundColor Green

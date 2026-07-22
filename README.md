@@ -4,15 +4,15 @@
 
 ## 快速開始
 
-### 方式一：完整安裝 00～08
+### 方式一：完整安裝 00～07
 
 在本 repo 根目錄執行：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File "skills/08-install-all/install-opencode-skills.ps1" -SourceRoot "skills" -Force
+powershell -ExecutionPolicy Bypass -File "skills/07-install-all/install-opencode-skills.ps1" -SourceRoot "skills" -Force
 ```
 
-這會把 repo 的 00～08 對應安裝為 `opencode-*` 名稱到 `~/.config/opencode/skills/`，不會在 `~/.agents/skills/` 留下本懶人包副本。接著載入 `opencode-install-all`，再逐項執行 00～07 的實際工具與 MCP 設定。
+這會把 repo 的 00～07 對應安裝為 `opencode-*` 名稱到 `~/.config/opencode/skills/`，不會在 `~/.agents/skills/` 留下本懶人包副本。接著載入 `opencode-install-all`，再逐項執行 00～06 的實際工具與 MCP 設定。
 
 若無法從完整 repo 執行，`opencode-install-all` 才會暫用 `npx skills` 取得來源；同步成功後會自動清除 `~/.agents/skills/` 中本懶人包的新舊名稱副本。
 
@@ -45,7 +45,6 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent
 | `opencode-notebooklm` | v0.4 | NotebookLM CLI 與 MCP；不額外安裝 nlm-skill |
 | `opencode-github` | v0.2 | Git、GitHub CLI、登入與選用 push 測試 |
 | `opencode-obsidian` | v0.3 | 使用 MCPVault 連接 Obsidian |
-| `opencode-second-brain` | v0.3 | 建立每日筆記／創作庫／知識庫三層結構 |
 | `opencode-firebase` | v0.2 | Firebase CLI 與限定目錄／功能的 MCP |
 | `opencode-browser` | v0.4 | Playwright MCP 與 open-computer-use |
 | `opencode-draw` | v0.5 | OpenCode 專用 GPT Image 2 生圖，禁止跨用 Codex Skill |
@@ -59,10 +58,9 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent
 | 01 | [連接 NotebookLM](01-連接-NotebookLM.md) |
 | 02 | [連接 GitHub](02-連接-GitHub.md) |
 | 03 | [建立第二大腦 Obsidian](03-建立第二大腦-Obsidian.md) |
-| 04 | [第二大腦設定指南](04-第二大腦設定指南.md) |
-| 05 | [連接 Firebase](05-連接-Firebase.md) |
-| 06 | [安裝瀏覽器控制](06-安裝瀏覽器控制.md) |
-| 07 | [生圖技能](07-生圖.md) |
+| 04 | [連接 Firebase](04-連接-Firebase.md) |
+| 05 | [安裝瀏覽器控制](05-安裝瀏覽器控制.md) |
+| 06 | [生圖技能](06-生圖.md) |
 
 ## OpenCode 路徑
 
@@ -72,7 +70,7 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent
 - MCP 管理：`opencode mcp add`、`opencode mcp list`
 - 模型登入：`opencode auth login`、`opencode auth list`
 
-完整安裝後，`~/.config/opencode/skills/` 應包含本懶人包預期的 9 個 `opencode-*` Skills。流程不安裝 `nlm-skill`，也不在 `~/.agents/skills/` 留下本懶人包的新舊名稱副本。
+完整安裝後，`~/.config/opencode/skills/` 應包含本懶人包預期的 8 個 `opencode-*` Skills，且不再包含已退役的 `opencode-second-brain`。流程不安裝 `nlm-skill`，也不在 `~/.agents/skills/` 留下本懶人包的新舊名稱副本。
 
 Windows 原生環境可使用；需要最佳相容性時，OpenCode 官方建議使用 WSL。教學已將 PowerShell 與 Bash 分開標示。
 
