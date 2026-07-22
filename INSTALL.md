@@ -2,15 +2,15 @@
 
 ## 完整全域安裝
 
-「全部安裝」表示 repo 中 00～08 對應的 9 個 `opencode-*` Skills 都必須保留在 OpenCode 支援的全域目錄，不能只執行設定後留下 `opencode-draw`。
+「全部安裝」表示 repo 中 00～07 對應的 8 個 `opencode-*` Skills 都必須保留在 OpenCode 支援的全域目錄，不能只執行設定後留下 `opencode-draw`。
 
 在本 repo 根目錄直接同步，不經過 skills CLI 的共用目錄：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File "skills/08-install-all/install-opencode-skills.ps1" -SourceRoot "skills" -Force
+powershell -ExecutionPolicy Bypass -File "skills/07-install-all/install-opencode-skills.ps1" -SourceRoot "skills" -Force
 ```
 
-最終必須在 `~/.config/opencode/skills/` 看到 9 個 `opencode-*` 目錄，且 `~/.agents/skills/` 不得留下本懶人包副本。
+最終必須在 `~/.config/opencode/skills/` 看到 8 個 `opencode-*` 目錄，已退役的 `opencode-second-brain` 不得留存，且 `~/.agents/skills/` 不得留下本懶人包副本。
 
 若沒有完整 repo，才使用 `npx skills` 取得暫存來源；完成同步後，隨附腳本會刪除 `~/.agents/skills/` 中本懶人包的新舊名稱副本，並在目錄變空時一併移除空目錄。
 
@@ -22,16 +22,15 @@ powershell -ExecutionPolicy Bypass -File "skills/08-install-all/install-opencode
 | 01 | `opencode-notebooklm` | NotebookLM MCP | #00 |
 | 02 | `opencode-github` | Git、GitHub CLI 與登入 | 無 |
 | 03 | `opencode-obsidian` | Obsidian MCPVault | Node.js、vault |
-| 04 | `opencode-second-brain` | 第二大腦三層結構 | #03 |
-| 05 | `opencode-firebase` | Firebase MCP | Node.js |
-| 06 | `opencode-browser` | Playwright 與桌面控制 | Node.js |
-| 07 | `opencode-draw` | GPT Image 2 生圖 | uv、OpenAI API key |
-| 08 | `opencode-install-all` | 安裝 9 個 opencode-* Skills 並清除暫存副本 | 無 |
+| 04 | `opencode-firebase` | Firebase MCP | Node.js |
+| 05 | `opencode-browser` | Playwright 與桌面控制 | Node.js |
+| 06 | `opencode-draw` | GPT Image 2 生圖 | uv、OpenAI API key |
+| 07 | `opencode-install-all` | 安裝 8 個 opencode-* Skills 並清除暫存副本 | 無 |
 
 ## 執行方式
 
 1. 先列出上表，讓使用者選擇。
-2. 使用者選「全部」時，先用上方同步腳本將 9 個 `opencode-*` Skills 全部長駐安裝，再逐項說明並確認是否執行 00–07；不可把一次確認擴張成登入、建立遠端資源或刪除測試資料的授權。
+2. 使用者選「全部」時，先用上方同步腳本將 8 個 `opencode-*` Skills 全部長駐安裝，再逐項說明並確認是否執行 00–06；不可把一次確認擴張成登入、建立遠端資源或刪除測試資料的授權。
 3. 使用者只選部分項目時，對每個選取的 Skill 執行：
 
 ```bash
@@ -45,7 +44,7 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent
 
 ## 為什麼入口不是 SKILL.md？
 
-根目錄若存在 `SKILL.md`，`npx skills` 會把整個 repo 視為單一 Skill，導致 `skills/00-*` 到 `skills/08-*` 無法被列出。入口因此使用 `INSTALL.md`，真正可安裝的 Skills 全部位於 `skills/`。
+根目錄若存在 `SKILL.md`，`npx skills` 會把整個 repo 視為單一 Skill，導致 `skills/00-*` 到 `skills/07-*` 無法被列出。入口因此使用 `INSTALL.md`，真正可安裝的 Skills 全部位於 `skills/`。
 
 ## 完成回報
 

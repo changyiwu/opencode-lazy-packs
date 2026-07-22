@@ -13,12 +13,13 @@ $skillMappings = @(
     [pscustomobject]@{ SourceName = "01-notebooklm"; InstalledName = "opencode-notebooklm" },
     [pscustomobject]@{ SourceName = "02-github"; InstalledName = "opencode-github" },
     [pscustomobject]@{ SourceName = "03-obsidian"; InstalledName = "opencode-obsidian" },
-    [pscustomobject]@{ SourceName = "04-second-brain"; InstalledName = "opencode-second-brain" },
-    [pscustomobject]@{ SourceName = "05-firebase"; InstalledName = "opencode-firebase" },
-    [pscustomobject]@{ SourceName = "06-browser"; InstalledName = "opencode-browser" },
-    [pscustomobject]@{ SourceName = "07-draw"; InstalledName = "opencode-draw" },
-    [pscustomobject]@{ SourceName = "08-install-all"; InstalledName = "opencode-install-all" }
+    [pscustomobject]@{ SourceName = "04-firebase"; InstalledName = "opencode-firebase" },
+    [pscustomobject]@{ SourceName = "05-browser"; InstalledName = "opencode-browser" },
+    [pscustomobject]@{ SourceName = "06-draw"; InstalledName = "opencode-draw" },
+    [pscustomobject]@{ SourceName = "07-install-all"; InstalledName = "opencode-install-all" }
 )
+$retiredSourceNames = @("04-second-brain")
+$retiredInstalledNames = @("opencode-second-brain")
 
 $managedSourceRoot = Join-Path $HOME ".agents\skills"
 $scriptSkillRoot = Split-Path -Parent $PSCommandPath
@@ -153,15 +154,25 @@ if ($verificationErrors.Count -gt 0) {
     throw "Sync verification failed: $($verificationErrors -join '; ')"
 }
 
+$retiredTargetSkills = @($retiredInstalledNames | Where-Object {
+    Test-Path -LiteralPath (Join-Path $targetRootPath $_) -PathType Container
+})
+if ($retiredTargetSkills.Count -gt 0) {
+    throw "Retired OpenCode skill(s) still exist in the target directory: $($retiredTargetSkills -join ', '). Remove them after explicit approval, then run the sync again."
+}
+
 $removedManagedSkills = New-Object System.Collections.Generic.List[string]
 if (-not $KeepManagedSource -and (Test-Path -LiteralPath $managedSourceRoot -PathType Container)) {
-    foreach ($mapping in $skillMappings) {
-        foreach ($managedName in @($mapping.SourceName, $mapping.InstalledName)) {
-            $managedSkill = Join-Path $managedSourceRoot $managedName
-            if (Test-Path -LiteralPath $managedSkill -PathType Container) {
-                Remove-Item -LiteralPath $managedSkill -Recurse -Force
-                $removedManagedSkills.Add($managedName)
-            }
+    $managedNames = @(
+        $skillMappings | ForEach-Object { $_.SourceName; $_.InstalledName }
+        $retiredSourceNames
+        $retiredInstalledNames
+    ) | Sort-Object -Unique
+    foreach ($managedName in $managedNames) {
+        $managedSkill = Join-Path $managedSourceRoot $managedName
+        if (Test-Path -LiteralPath $managedSkill -PathType Container) {
+            Remove-Item -LiteralPath $managedSkill -Recurse -Force
+            $removedManagedSkills.Add($managedName)
         }
     }
 
@@ -175,7 +186,7 @@ if (-not $KeepManagedSource -and (Test-Path -LiteralPath $managedSourceRoot -Pat
     }
 }
 
-Write-Host "Sync complete: 9 opencode-* skills installed to $targetRootPath" -ForegroundColor Green
+Write-Host "Sync complete: 8 opencode-* skills installed to $targetRootPath" -ForegroundColor Green
 if ($removedManagedSkills.Count -gt 0) {
     Write-Host "Cleaned managed copies from ~/.agents/skills: $($removedManagedSkills -join ', ')" -ForegroundColor Green
 }
