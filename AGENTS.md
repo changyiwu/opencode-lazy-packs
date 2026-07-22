@@ -22,7 +22,7 @@ opencode-lazy-packs/
 ├── scripts/         # 輔助腳本（draw.py）
 ├── generated/       # 本機測試輸出（gitignore）
 ├── examples/        # 精選展示輸出
-├── 00-*.md ~ 08-*.md  # 教學流程文件
+├── 00-*.md ~ 07-*.md  # 教學流程文件
 ├── AGENTS.md        # 本檔案
 ├── INSTALL.md       # 懶人包入口說明（根目錄不可放 SKILL.md，否則 npx 只發現一個 Skill）
 ├── README.md
@@ -36,7 +36,7 @@ opencode-lazy-packs/
 - 每日筆記：`每日筆記/<日期>.md`
 - 創作庫：`創作庫/`
 - 專案駕駛艙：`opencode-lazy-packs-專案駕駛艙.md`
-- 收工注意：檢查 `.openai.env` 是否被 git 追蹤（敏感金鑰）
+- 敏感資料注意：檢查 `.openai.env` 是否被 git 追蹤
 - 知識庫：`知識庫/`
 
 ## 同步對照表
@@ -59,3 +59,7 @@ opencode-lazy-packs/
 - `origin` 指向 `changyiwu/opencode-lazy-packs`，`upstream` 指向 `mathruffian-dot/opencode-lazy-packs`
 - 修改教學或 Skills 後執行：`powershell -ExecutionPolicy Bypass -File scripts/validate-lazy-pack.ps1`
 - `generated/` 僅放本機測試輸出；需要保留的展示圖移到 `examples/`
+
+## 最近進度
+
+- 2026-07-22：移除內建工作流程 Skill，將生圖與全部安裝 Skill 重編為 #07、#08，並同步安裝器與驗證規則；發布驗證已通過。

@@ -13,6 +13,7 @@ package-lock.json
 .claude/
 .codex/
 .opencode/
+.playwright-mcp/
 .config/opencode/
 .agents/skills/
 /skills-lock.json
