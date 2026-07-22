@@ -9,13 +9,12 @@
 - `scripts/validate-lazy-pack.ps1` 已通過，repo 現有 8 個 `opencode-*` Skills。
 - 隔離安裝測試已成功安裝 8 個 Skills；`draw.py` AST 語法驗證通過。
 - 本輪尚未同步 `~/.config/opencode/skills/`，全域舊副本 `opencode-second-brain` 可能仍存在。
-- Obsidian MCP 已完成讀取驗證；新的 `專案工作流程.md` 將在本輪 Git 推送完成後補寫詳細收工紀錄。
+- Obsidian MCP 已完成讀寫驗證；新的 `專案工作流程.md` 已補寫詳細收工紀錄。
 
 ## ➡️ 下一步
 
 1. 執行 `skills/07-install-all/install-opencode-skills.ps1`，同步 OpenCode 全域 Skills。
 2. 確認後移除全域舊副本 `opencode-second-brain`，再驗證全域目錄只有預期的 8 個相關 Skills，且沒有舊編號副本。
-3. Git 推送完成後，將本次移除與重編決策補記到 `opencode-lazy-packs/專案工作流程.md`。
 
 ## ⚠️ 注意事項
 
