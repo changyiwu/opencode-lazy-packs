@@ -1,18 +1,18 @@
 # OpenCode 懶人包
 
-一套給 OpenCode 使用者的繁體中文環境、MCP 與工作流程 Skills。每個項目可獨立安裝；涉及軟體安裝、登入、遠端建立或刪除時會逐步詢問。
+一套給 OpenCode 使用者的繁體中文環境、MCP 與生圖 Skills。每個項目可獨立安裝；涉及軟體安裝、登入、遠端建立或刪除時會逐步詢問。
 
 ## 快速開始
 
-### 方式一：完整安裝 00～09
+### 方式一：完整安裝 00～08
 
 在本 repo 根目錄執行：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File "skills/09-install-all/install-opencode-skills.ps1" -SourceRoot "skills" -Force
+powershell -ExecutionPolicy Bypass -File "skills/08-install-all/install-opencode-skills.ps1" -SourceRoot "skills" -Force
 ```
 
-這會把 repo 的 00～09 對應安裝為 `opencode-*` 名稱到 `~/.config/opencode/skills/`，不會在 `~/.agents/skills/` 留下本懶人包副本。接著載入 `opencode-install-all`，再逐項執行 00～08 的實際工具與 MCP 設定。
+這會把 repo 的 00～08 對應安裝為 `opencode-*` 名稱到 `~/.config/opencode/skills/`，不會在 `~/.agents/skills/` 留下本懶人包副本。接著載入 `opencode-install-all`，再逐項執行 00～07 的實際工具與 MCP 設定。
 
 若無法從完整 repo 執行，`opencode-install-all` 才會暫用 `npx skills` 取得來源；同步成功後會自動清除 `~/.agents/skills/` 中本懶人包的新舊名稱副本。
 
@@ -48,7 +48,6 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent
 | `opencode-second-brain` | v0.3 | 建立每日筆記／創作庫／知識庫三層結構 |
 | `opencode-firebase` | v0.2 | Firebase CLI 與限定目錄／功能的 MCP |
 | `opencode-browser` | v0.4 | Playwright MCP 與 open-computer-use |
-| `opencode-workflow-skills` | v0.2 | 安裝 startup、shutdown、project-init 完整 Skills |
 | `opencode-draw` | v0.5 | OpenCode 專用 GPT Image 2 生圖，禁止跨用 Codex Skill |
 | `opencode-install-all` | v0.4 | 直接安裝至 OpenCode 專用目錄並清除 .agents 副本 |
 
@@ -63,8 +62,7 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent
 | 04 | [第二大腦設定指南](04-第二大腦設定指南.md) |
 | 05 | [連接 Firebase](05-連接-Firebase.md) |
 | 06 | [安裝瀏覽器控制](06-安裝瀏覽器控制.md) |
-| 07 | [開工／收工／初始化技能](07-開工收工初始化技能.md) |
-| 08 | [生圖技能](08-生圖.md) |
+| 07 | [生圖技能](07-生圖.md) |
 
 ## OpenCode 路徑
 
@@ -74,7 +72,7 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent
 - MCP 管理：`opencode mcp add`、`opencode mcp list`
 - 模型登入：`opencode auth login`、`opencode auth list`
 
-完整安裝後，`~/.config/opencode/skills/` 應只包含本懶人包預期的 13 個 Skills：10 個 `opencode-*`，加上 `startup`、`shutdown`、`project-init`。流程不安裝 `nlm-skill`，也不在 `~/.agents/skills/` 留下本懶人包的新舊名稱副本。
+完整安裝後，`~/.config/opencode/skills/` 應包含本懶人包預期的 9 個 `opencode-*` Skills。流程不安裝 `nlm-skill`，也不在 `~/.agents/skills/` 留下本懶人包的新舊名稱副本。
 
 Windows 原生環境可使用；需要最佳相容性時，OpenCode 官方建議使用 WSL。教學已將 PowerShell 與 Bash 分開標示。
 

@@ -16,9 +16,8 @@ $skillMappings = @(
     [pscustomobject]@{ SourceName = "04-second-brain"; InstalledName = "opencode-second-brain" },
     [pscustomobject]@{ SourceName = "05-firebase"; InstalledName = "opencode-firebase" },
     [pscustomobject]@{ SourceName = "06-browser"; InstalledName = "opencode-browser" },
-    [pscustomobject]@{ SourceName = "07-workflow-skills"; InstalledName = "opencode-workflow-skills" },
-    [pscustomobject]@{ SourceName = "08-draw"; InstalledName = "opencode-draw" },
-    [pscustomobject]@{ SourceName = "09-install-all"; InstalledName = "opencode-install-all" }
+    [pscustomobject]@{ SourceName = "07-draw"; InstalledName = "opencode-draw" },
+    [pscustomobject]@{ SourceName = "08-install-all"; InstalledName = "opencode-install-all" }
 )
 
 $managedSourceRoot = Join-Path $HOME ".agents\skills"
@@ -176,7 +175,7 @@ if (-not $KeepManagedSource -and (Test-Path -LiteralPath $managedSourceRoot -Pat
     }
 }
 
-Write-Host "Sync complete: 10 opencode-* skills installed to $targetRootPath" -ForegroundColor Green
+Write-Host "Sync complete: 9 opencode-* skills installed to $targetRootPath" -ForegroundColor Green
 if ($removedManagedSkills.Count -gt 0) {
     Write-Host "Cleaned managed copies from ~/.agents/skills: $($removedManagedSkills -join ', ')" -ForegroundColor Green
 }
