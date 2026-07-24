@@ -66,7 +66,7 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名稱> --agent
 
 - 全域設定：`~/.config/opencode/opencode.json`
 - OpenCode 專用全域 Skills：`~/.config/opencode/skills/<name>/SKILL.md`
-- 專案規則：`AGENTS.md`
+- 專案規則：`agents.md`
 - MCP 管理：`opencode mcp add`、`opencode mcp list`
 - 模型登入：`opencode auth login`、`opencode auth list`
 
