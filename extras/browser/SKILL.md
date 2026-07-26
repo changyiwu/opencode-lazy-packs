@@ -1,7 +1,10 @@
-# OpenCode 懶人包 #06：安裝瀏覽器控制
+---
+name: opencode-browser
+description: 安裝瀏覽器控制工具（Playwright MCP + open-computer-use）。說「裝瀏覽器控制」「瀏覽器自動化」時載入。
+---
 
-> 版本：v0.3
-> 更新日期：2026-05-25
+# OpenCode 加碼包：安裝瀏覽器控制（extras，非研習主線）
+
 
 ---
 
@@ -132,12 +135,3 @@ cli-anything-browser extract --selector "main"
 | `npx open-computer-use` 工具不出現 | 改用 `command: ["open-computer-use", "mcp"]` |
 | Windows `install-opencode-mcp` 報錯 | 手動編輯 opencode.json，不執行自動安裝 |
 
----
-
-## 更新紀錄
-
-| 日期 | 版本 | 更新內容 |
-|------|------|---------|
-| 2026-05-25 | v0.3 | 補充 CLI-Anything Browser CLI 輕量替代方案
-| 2026-05-19 | v0.1 | 初版 |
-| 2026-05-19 | v0.2 | 修正 open-computer-use 啟動方式 |

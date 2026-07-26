@@ -1,7 +1,10 @@
-# OpenCode 懶人包 #05：連接 Firebase
+---
+name: opencode-firebase
+description: 連接 Firebase，讓 OpenCode 管理 Firestore / Hosting / Auth。說「連接 Firebase」「設定 Firebase」時載入。
+---
 
-> 版本：v0.1
-> 更新日期：2026-05-19
+# OpenCode 加碼包：連接 Firebase（extras，非研習主線）
+
 
 ---
 
@@ -113,10 +116,3 @@ firebase init
 | `firebase login` 瀏覽器不開 | 手動執行，或檢查防火牆 |
 | opencode.json 路徑錯誤 | 確認 `~/.config/opencode/opencode.json` 存在 |
 
----
-
-## 更新紀錄
-
-| 日期 | 版本 | 更新內容 |
-|------|------|---------|
-| 2026-05-19 | v0.1 | 初版 |

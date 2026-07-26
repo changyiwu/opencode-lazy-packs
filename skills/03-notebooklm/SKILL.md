@@ -1,7 +1,10 @@
-# OpenCode 懶人包 #01：連接 NotebookLM
+---
+name: opencode-notebooklm
+description: 連接 NotebookLM，讓 OpenCode 讀寫 Google NotebookLM 筆記本。說「連接 NotebookLM」「裝 NotebookLM」時載入。
+---
 
-> 版本：v0.2
-> 更新日期：2026-06-12
+# OpenCode 懶人包 #03：連接 NotebookLM
+
 
 > 📌 **本懶人包可獨立執行**：會自動檢查並安裝所需工具。
 
@@ -29,7 +32,7 @@ OpenCode ←(MCP 協定)→ nlm（翻譯官）←(Google 登入)→ NotebookLM
 
 ## 先備條件
 
-- [ ] Node.js 18+ 已安裝
+- [ ] Node.js 已安裝（版本不拘，由 00-env-setup 負責）
 - [ ] OpenCode 已安裝
 - [ ] 有 Google 帳號
 - [ ] 電腦有網路連線
@@ -63,7 +66,7 @@ pip install notebooklm-mcp-cli
 1. **確認作業系統**：Windows / macOS / Linux
 2. **確認網路連線正常**
 3. **檢查 uv 或 pip 是否可用**：`uv --version` 或 `pip --version`，如果都沒裝，步驟一會補裝 uv
-4. **檢查 Node.js**：`node --version`（需 18+）
+4. **檢查 Node.js**：`node --version`（有輸出即可；未安裝請回 00-env-setup）
 
 ---
 
@@ -229,11 +232,3 @@ Documents/
 | Windows 上指令格式錯誤 | 使用 PowerShell，不要用 CMD |
 | `nlm list` 在 Windows 顯示亂碼 | 設定 `$env:PYTHONIOENCODING = "utf-8"`，這是已知的 cp950 編碼問題，不影響功能 |
 
----
-
-## 更新紀錄
-
-| 日期 | 版本 | 更新內容 |
-|------|------|---------|
-| 2026-06-12 | v0.2 | 改用 `uv tool install` 為主、補 `nlm doctor`、路徑陷阱警告、本地資料夾、功能測試、復原流程 |
-| 2026-05-19 | v0.1 | 初版 |
