@@ -44,7 +44,8 @@ extras/<名稱>/SKILL.md         ← 加碼 2 包，非主線
 | 內部工具 | `02-file-toolkit` | 讓 agent 長出手腳（本機處理檔案、影音、語音） |
 | 外部工具 | `03-notebooklm`、`04-obsidian` | 把外面的服務接進來 |
 | 資料庫 | `05-sheets-gas` | 讓作品有地方存資料（🚧 未撰寫） |
-| API | `06-groq-whisper` | 呼叫外部服務（🚧 未撰寫） |
+| 資料庫 | `05-sheets-gas` ／ `06-supabase` | 讓成品記得住東西 |
+| API | `09-groq-api` | 呼叫外部服務（🚧 未撰寫） |
 | 跨電腦 | `07-github`、`08-workflow-skills` | 換一台電腦也接得回來 |
 
 > ⚠️ **`00` 裝完不等於能用。** `00` 只裝工具，**`01` 才接上模型**。
@@ -65,10 +66,11 @@ extras/<名稱>/SKILL.md         ← 加碼 2 包，非主線
 | 「連接 NotebookLM」「自動做簡報／資訊圖表」 | `03-notebooklm` |
 | 「連接 Obsidian」「第二大腦」「讀我的筆記」 | `04-obsidian` |
 | 「用 Google 試算表存資料」「GAS」「表單後端」 | `05-sheets-gas`（🚧 未完成，見下方） |
-| 「語音轉字幕」「上字幕」「Whisper」 | `06-groq-whisper`（🚧 未完成，見下方） |
+| 「語音轉字幕」「上字幕」「Whisper」 | `09-groq-api`（🚧 未完成，見下方） |
+| 「資料庫」「存資料」「文字雲」「即時」 | 非即時→`05-sheets-gas`；即時→`06-supabase` |
 | 「連接 GitHub」「clone 懶人包」「怕弄丟」「換電腦拿回檔案」 | `07-github` |
 | 「開工」「收工」「初始化專案」「跨電腦接續」 | `08-workflow-skills` |
-| 「連接 Firebase」「即時互動網頁」 | `extras/firebase` |
+| 「連接 Firebase」 | `extras/firebase`（替代方案；預設請用 `06-supabase`）|
 | 「瀏覽器自動化」「讓 AI 操作網頁」 | `extras/browser` |
 | 「生圖」「畫圖」 | 不在本 repo。指向 <https://github.com/mathruffian-dot/opencode-draw-free> |
 
@@ -87,7 +89,7 @@ extras/<名稱>/SKILL.md         ← 加碼 2 包，非主線
 
 ---
 
-## 未完成的包：`05-sheets-gas`、`06-groq-whisper`
+## 未完成的包：`09-groq-api`
 
 這兩包目前**只是佔位檔**，裡面沒有可執行的步驟。
 

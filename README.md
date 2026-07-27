@@ -59,7 +59,8 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名> -g -y
 | 03 | [連接 NotebookLM](skills/03-notebooklm/SKILL.md)<br>`03-notebooklm` | 外部工具 | AI Agent 基本功 EP04 | ✅ | NotebookLM MCP：自動產簡報、資訊圖表、音訊概覽 |
 | 04 | [連接 Obsidian](skills/04-obsidian/SKILL.md)<br>`04-obsidian` | 外部工具 | AI Agent 基本功 EP06 | ✅ | 第二大腦：讓 OpenCode 讀寫你的筆記庫 |
 | 05 | [Google Sheets ＋ GAS](skills/05-sheets-gas/SKILL.md)<br>`05-sheets-gas` | 資料庫 | 待補 | 🚧 | 用試算表當後端資料庫（**尚未撰寫，目前是佔位檔**）|
-| 06 | [Groq Whisper 語音轉字幕](skills/06-groq-whisper/SKILL.md)<br>`06-groq-whisper` | API | 待補 | 🚧 | 影音自動上字幕（**尚未撰寫，目前是佔位檔**）|
+| 06 | [Supabase 即時資料庫](skills/06-supabase/SKILL.md)<br>`06-supabase` | 資料庫 | AI Agent 基本功 EP05 | ✅ | 多人同時寫入：文字雲、線上對戰、即時排行榜 |
+| 09 | [Groq API 語音轉字幕](skills/09-groq-api/SKILL.md)<br>`09-groq-api` | API | 待補 | 🚧 | 影音自動上字幕（**尚未撰寫，目前是佔位檔**）|
 | 07 | [連接 GitHub](skills/07-github/SKILL.md)<br>`07-github` | 跨電腦 | AI Agent 基本功 EP01（clone）<br>AI Agent 基本功 EP06（跨電腦）| ✅ | 三階段：clone 拿別人的 → push 存自己的 → 換電腦 pull 驗收 |
 | 08 | [開工／收工／初始化技能](skills/08-workflow-skills/SKILL.md)<br>`08-workflow-skills` | 跨電腦 | AI Agent 基本功 EP05<br>AI Agent 基本功 EP06 | ✅ | 三個全域技能：`startup`、`shutdown`、`project-init` |
 
@@ -86,7 +87,8 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名> -g -y
 內部工具    #02 內部工具包                     ← 讓 agent 長出手腳
 外部工具    #03 NotebookLM   #04 Obsidian      ← 把外面的工具接進來
 資料庫      #05 Sheets ＋ GAS                  ← 讓作品有地方存資料
-API         #06 Groq Whisper                   ← 呼叫外部服務
+資料庫       #05 Apps Script ／ #06 Supabase      ← 讓成品記得住
+API         #09 Groq API                        ← 呼叫外部服務
 跨電腦      #07 GitHub   #08 開工／收工技能     ← 換一台電腦也接得回來
 ```
 
@@ -99,7 +101,7 @@ API         #06 Groq Whisper                   ← 呼叫外部服務
 
 | 路徑 | 內容 | 說明 |
 |------|------|------|
-| [`extras/firebase/SKILL.md`](extras/firebase/SKILL.md) | 連接 Firebase | 想做即時互動網頁的老手加碼路線 |
+| [`extras/firebase/SKILL.md`](extras/firebase/SKILL.md) | 連接 Firebase | 即時資料庫的**替代方案**；主線走 `06-supabase` |
 | [`extras/browser/SKILL.md`](extras/browser/SKILL.md) | 瀏覽器控制 | 讓 agent 自己操作瀏覽器 |
 
 `skills/` 與 `extras/` 的差別：

@@ -49,9 +49,10 @@
 
 ### 待補（v2 tag 之前要完成）
 
-- `05-sheets-gas`（Google Sheets ＋ GAS 後端）——目前是佔位檔
-- `06-groq-whisper`（語音轉字幕）——目前是佔位檔
-- `02-file-toolkit` 的影音與語音段落擴充中
+- `09-groq-api`（語音轉字幕）——目前是佔位檔，Day 3 內容確定後補
+
+已於本次補齊：`05-sheets-gas`（改走 Apps Script 網頁應用程式，不用 clasp）、
+`06-supabase`（取代 Firebase 成為即時資料庫主線）、`02-file-toolkit` 的影音與語音段落。
 
 ---
 

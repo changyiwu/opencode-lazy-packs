@@ -25,7 +25,8 @@ description: OpenCode 懶人包全集 — 環境建置、連接模型、MCP 串�
 | 03 | `03-notebooklm` | 連接 NotebookLM | 外部工具 | #00、#01 | ✅ |
 | 04 | `04-obsidian` | 連接 Obsidian 第二大腦 | 外部工具 | #00、#01、有 vault | ✅ |
 | 05 | `05-sheets-gas` | Google Sheets ＋ GAS 後端 | 資料庫 | — | 🚧 未撰寫 |
-| 06 | `06-groq-whisper` | Groq Whisper 語音轉字幕 | API | — | 🚧 未撰寫 |
+| 06 | `06-supabase` | Supabase 即時資料庫 | 資料庫 | 00 | ✅ |
+| 09 | `09-groq-api` | Groq API 語音轉字幕 | API | 00 | 🚧 未撰寫 |
 | 07 | `07-github` | 連接 GitHub（三階段） | 跨電腦 | #00 | ✅ |
 | 08 | `08-workflow-skills` | 開工／收工／初始化技能 | 跨電腦 | #00；L2 要 #07、L3 要 #04 | ✅ |
 
@@ -33,7 +34,7 @@ description: OpenCode 懶人包全集 — 環境建置、連接模型、MCP 串�
 
 | 路徑 | 名稱 |
 |------|------|
-| `extras/firebase` | 連接 Firebase |
+| `extras/firebase` | 連接 Firebase（即時資料庫的替代方案，主線走 `06-supabase`）|
 | `extras/browser` | 瀏覽器控制 |
 
 **列表時一定要附上這兩句話：**

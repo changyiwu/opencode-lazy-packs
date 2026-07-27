@@ -407,6 +407,222 @@ winget list --id SST.OpenCodeDesktop --exact
 
 ---
 
+## 📎 附錄：MCP 通用守則（後面每一包都會用到，先看一眼）
+
+從 `03-notebooklm` 開始，幾乎每一包都要在 `~/.config/opencode/opencode.json` 的 `mcp` 區塊加一段設定。
+下面六條是**每一包共用**的，各包不再重複說明。**裝 MCP 卡住的時候，先回來對這一頁。**
+
+> 🎯 這一節現在不用動手，只要知道「有這一頁」就好。等你做到後面幾包再回來查。
+
+---
+
+### 1. 🔴 一定要加 `timeout`，不加幾乎必翻車
+
+**OpenCode 的 MCP 逾時預設只有 5000 毫秒（5 秒）。**
+
+用 `npx` 啟動的 MCP，第一次要先上網把套件下載下來，通常遠超過 5 秒 → OpenCode 直接判定連線失敗。
+研習現場整間教室同時下載，只會更慢。**這是最容易整班一起卡住的地方。**
+
+```json
+{
+  "mcp": {
+    "example": {
+      "type": "local",
+      "command": ["npx", "-y", "某個-mcp-套件"],
+      "enabled": true,
+      "timeout": 300000
+    }
+  }
+}
+```
+
+`300000` 毫秒 = 5 分鐘。套件下載過一次會被快取，之後啟動很快，但這個值留著不會有副作用，**每一台 MCP 都加上去就對了**。
+
+> 💡 **加了還是逾時？** 部分版本的 OpenCode 對「單一 server 的 timeout」支援不穩定。再補一個全域設定（跟 `mcp` 同一層）：
+> ```json
+> {
+>   "experimental": {
+>     "mcp_timeout": 300000
+>   }
+> }
+> ```
+
+> 🖐️ **研習現場的預防針**：講師可以請大家**先在終端機手動跑一次** `npx -y 某個-mcp-套件`，讓套件先下載完（跑起來後按 Ctrl+C 中止即可）。之後 OpenCode 啟動就不會卡在下載。
+
+---
+
+### 2. ✅ 驗證用 `opencode mcp list`，不要用「重開問問看」
+
+改完設定，**不要**靠「重開 OpenCode，問它有沒有工具」來判斷成功——問不出來也可能只是它沒想到要用。
+
+```bash
+opencode mcp list
+```
+
+**預期輸出**：每一台 server 一列，狀態顯示 **`✓ connected`**。看到 `✓` 才算成功，這是唯一可靠的判準。
+
+其他相關指令：
+
+| 指令 | 用途 |
+|------|------|
+| `opencode mcp add` | 互動式新增一台 server（會幫你寫成正確格式，不用背欄位） |
+| `opencode mcp list` | 列出所有 server 與連線狀態 ← **驗證就看這個** |
+| `opencode mcp auth <名稱>` | 對支援 OAuth 的遠端 server 登入（見第 6 點） |
+| `opencode mcp logout <名稱>` | 清掉該 server 的登入憑證 |
+| `opencode mcp debug <名稱>` | 連不上時看細節 |
+
+---
+
+### 3. ⚠️ 網路上抄來的設定多半是 Claude Code 的，直接貼一定壞
+
+**OpenCode 的欄位名稱跟 Claude Code 不相容。** 這是照抄教學最常見的死法：
+
+| 項目 | Claude Code 的寫法 | OpenCode 的寫法 |
+|------|-------------------|-----------------|
+| 區塊名稱 | `"mcpServers"` | **`"mcp"`** |
+| 執行指令 | `"command": "npx"`（字串） | **`"command": ["npx", …]`（陣列）** |
+| 參數 | `"args": ["-y", "套件名"]` | **沒有 `args` 欄位**，全部併進 `command` 陣列 |
+| 環境變數 | `"env": { … }` | **`"environment": { … }`** |
+| 遠端 server | `"type": "sse"` / `"http"` | **`"type": "remote"` + `"url"`** |
+
+**❌ 錯誤（Claude Code 的格式，OpenCode 讀不懂）**
+
+```json
+{
+  "mcpServers": {
+    "example": {
+      "command": "npx",
+      "args": ["-y", "某個-mcp-套件"],
+      "env": { "MY_TOKEN": "abc123" }
+    }
+  }
+}
+```
+
+**✅ 正確（OpenCode 的格式）**
+
+```json
+{
+  "mcp": {
+    "example": {
+      "type": "local",
+      "command": ["npx", "-y", "某個-mcp-套件"],
+      "environment": { "MY_TOKEN": "{env:MY_TOKEN}" },
+      "enabled": true,
+      "timeout": 300000
+    }
+  }
+}
+```
+
+> 對照著看：`command` 和 `args` **合併成一個陣列**，`env` **改名叫** `environment`，最外層 **`mcpServers` 改成 `mcp`**。
+
+---
+
+### 4. 💬 OpenCode 的設定檔**可以**寫註解、**容許**尾逗號
+
+OpenCode 用 JSONC（JSON with Comments）解析設定檔，所以下面這些都不會壞：
+
+```jsonc
+{
+  "mcp": {
+    // 這行註解是合法的
+    "example": {
+      "type": "local",
+      "command": ["npx", "-y", "某個-mcp-套件"],
+      "timeout": 300000,   // 行末註解也可以
+    },                     // 最後一項後面多一個逗號，也不會壞
+  }
+}
+```
+
+檔案也可以直接存成 `opencode.jsonc`。
+
+> 📌 **如果你看到某份教學說「opencode.json 絕對不能有註解、最後一項不能有逗號」——那是在講一般 JSON，對 OpenCode 不適用。**
+> 但**其他格式錯誤照樣會壞**：大括號少一個、引號沒成對、Windows 路徑的反斜線沒寫成兩條 `\\`。
+> 所以設定改完，還是要用 `opencode mcp list` 驗一次。
+
+---
+
+### 5. 🔑 金鑰不要寫明文，用 `{env:變數名}`
+
+**研習現場的設定檔會投影在大螢幕上，明文金鑰等於當場公開**，還會被拍照。
+OpenCode 支援從環境變數讀值：
+
+```json
+{
+  "mcp": {
+    "example": {
+      "type": "local",
+      "command": ["npx", "-y", "某個-mcp-套件"],
+      "environment": { "MY_API_KEY": "{env:MY_API_KEY}" },
+      "enabled": true,
+      "timeout": 300000
+    }
+  }
+}
+```
+
+**怎麼設環境變數：**
+
+Windows（PowerShell，設完要**重開終端機**才生效）：
+```powershell
+[System.Environment]::SetEnvironmentVariable("MY_API_KEY", "你的金鑰", "User")
+```
+
+macOS / Linux（寫進 `~/.zshrc` 或 `~/.bashrc`）：
+```bash
+export MY_API_KEY="你的金鑰"
+```
+
+也可以改成讀檔：`"MY_API_KEY": "{file:~/.secrets/my-api-key}"`。
+
+> 🖐️ 不管用哪種，**都不要把含金鑰的檔案推上 GitHub**（見 `07-github`）。
+> 🖐️ 金鑰打錯時，`opencode mcp list` 通常仍顯示 connected（連得上、但呼叫會被拒絕）。真正要驗的是實際叫一次工具。
+
+---
+
+### 6. 🌐 遠端 MCP（`type: "remote"`）最省事：完全不用管 token
+
+有些服務直接提供「遠端 MCP」——不用在你電腦上裝任何東西，也不用申請金鑰。OpenCode 支援 OAuth 自動註冊：
+
+```json
+{
+  "mcp": {
+    "example-remote": {
+      "type": "remote",
+      "url": "https://某服務的網址/mcp",
+      "enabled": true,
+      "timeout": 300000
+    }
+  }
+}
+```
+
+然後跑一次：
+
+```bash
+opencode mcp auth example-remote
+```
+
+瀏覽器會開啟授權頁，**按同意就好**。不需要申請、複製、貼上任何 token，也沒有金鑰外洩的問題。
+
+- 要換帳號 / 重來：`opencode mcp logout example-remote`，再 auth 一次
+- 授權卡住：`opencode mcp debug example-remote`
+
+> 💡 **只要某個服務有提供遠端 MCP，優先走這條。** 對零程式基礎的老師來說，它比「本機安裝工具 + 申請金鑰 + 貼進設定檔」簡單一個數量級。
+
+---
+
+### 📋 加完任何一台 MCP，照這四步收尾
+
+1. **對格式**：`command` 是陣列、**沒有** `args`、環境變數欄位叫 `environment`、外層是 `mcp`
+2. **加逾時**：`"timeout": 300000`（還逾時就再補 `experimental.mcp_timeout`）
+3. **完全關閉 OpenCode 再重開**（不是關視窗，是整個結束程式）
+4. **`opencode mcp list`** → 看到 `✓ connected` 才算完成
+
+---
+
 ## ➡️ 下一步：#01 連接模型
 
 環境有了，但 OpenCode 還沒有「腦」。**接著做懶人包 `01-connect-model`**，把 AI 模型接上去，它才會開始回答你、開始幫你做事。
