@@ -708,17 +708,3 @@ next=03-notebooklm
 
 **刻意沒做的事：** 不在本包寫死任何價格與版本號（A 段既有的 `requirements-core.txt` 釘選除外，那是刻意釘的）；B、C 段的工具都會持續更新，寫死只會讓文件過期。
 
----
-
-## 更新紀錄
-
-| 日期 | 版本 | 更新內容 |
-|------|------|---------|
-| 2026-07-27 | v2.1 | **擴充為三合一**：新增標配 B（yt-dlp／FFmpeg／deno，含常用指令表與兩個實測踩坑）、標配 C（Edge-TTS 安裝與一行發聲驗證）；三段各自獨立驗證；成功訊號改為 `OPENCODE_INTERNAL_TOOLKIT` 分段回報；全部 winget 指令補 `--scope user` 備案；補 mac／Linux 等價指令；解掉三處新舊衝突 |
-| — | v2.0 | 單一檔案版：A 段（Python 標配 10 套件）＋五處已知修正 |
-
----
-
-> 素材來源：三師爸 Sense Bar｜AI Agent 基本功 EP03｜youtube.com/@sensebar
-> A 段腳本與範例：https://github.com/mathruffian-dot/ai-agent-ep03（分支 `master`）
-> C 段完整語音技能：https://github.com/mathruffian-dot/agent-speak-skill

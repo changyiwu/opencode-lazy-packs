@@ -49,10 +49,14 @@
 
 ### 待補（v2 tag 之前要完成）
 
-- `09-groq-api`（語音轉字幕）——目前是佔位檔，Day 3 內容確定後補
+全部十一包已到齊。v2 可發布。
 
-已於本次補齊：`05-sheets-gas`（改走 Apps Script 網頁應用程式，不用 clasp）、
-`06-supabase`（取代 Firebase 成為即時資料庫主線）、`02-file-toolkit` 的影音與語音段落。
+最後補齊的兩包：
+- **`09-groq-api`**：語音轉字幕 ＋ 文字清洗。免費方案**不需要信用卡**（已對照官方 Billing FAQs 查證）。
+  推薦 `whisper-large-v3` 而非 turbo——免費方案兩者額度完全相同，turbo 的優勢只有價格，對免費用戶等於零。
+  最大的坑：Groq 的 `response_format` **沒有 `srt`**（OpenAI 有），填了回 400，所以本包附了自己組 SRT 的程式。
+- **`10-netlify`**：網頁部署 ＋ 用 Functions 把 API 金鑰藏在後端。
+  核心紀律是**先草稿再正式**——Netlify 2025-09 起改點數制，正式部署一次 15 點、每月 300 點，用完全站下線。
 
 ---
 

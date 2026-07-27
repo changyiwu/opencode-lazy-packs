@@ -58,11 +58,12 @@ npx skills add mathruffian-dot/opencode-lazy-packs --skill <skill名> -g -y
 | 02 | [內部工具包](skills/02-file-toolkit/SKILL.md)<br>`02-file-toolkit` | 內部工具 | AI Agent 基本功 EP03 | ✅ | Python 文件處理（Word／Excel／PPT／PDF／QR）＋ yt-dlp／FFmpeg ＋ Edge-TTS |
 | 03 | [連接 NotebookLM](skills/03-notebooklm/SKILL.md)<br>`03-notebooklm` | 外部工具 | AI Agent 基本功 EP04 | ✅ | NotebookLM MCP：自動產簡報、資訊圖表、音訊概覽 |
 | 04 | [連接 Obsidian](skills/04-obsidian/SKILL.md)<br>`04-obsidian` | 外部工具 | AI Agent 基本功 EP06 | ✅ | 第二大腦：讓 OpenCode 讀寫你的筆記庫 |
-| 05 | [Google Sheets ＋ GAS](skills/05-sheets-gas/SKILL.md)<br>`05-sheets-gas` | 資料庫 | 待補 | 🚧 | 用試算表當後端資料庫（**尚未撰寫，目前是佔位檔**）|
+| 05 | [Google Sheets ＋ Apps Script](skills/05-sheets-gas/SKILL.md)<br>`05-sheets-gas` | 資料庫 | AI Agent 基本功 EP05 | ✅ | 用試算表當後端。**瀏覽器直接貼程式碼部署，不用 clasp** |
 | 06 | [Supabase 即時資料庫](skills/06-supabase/SKILL.md)<br>`06-supabase` | 資料庫 | AI Agent 基本功 EP05 | ✅ | 多人同時寫入：文字雲、線上對戰、即時排行榜 |
-| 09 | [Groq API 語音轉字幕](skills/09-groq-api/SKILL.md)<br>`09-groq-api` | API | 待補 | 🚧 | 影音自動上字幕（**尚未撰寫，目前是佔位檔**）|
 | 07 | [連接 GitHub](skills/07-github/SKILL.md)<br>`07-github` | 跨電腦 | AI Agent 基本功 EP01（clone）<br>AI Agent 基本功 EP06（跨電腦）| ✅ | 三階段：clone 拿別人的 → push 存自己的 → 換電腦 pull 驗收 |
 | 08 | [開工／收工／初始化技能](skills/08-workflow-skills/SKILL.md)<br>`08-workflow-skills` | 跨電腦 | AI Agent 基本功 EP05<br>AI Agent 基本功 EP06 | ✅ | 三個全域技能：`startup`、`shutdown`、`project-init` |
+| 09 | [Groq API](skills/09-groq-api/SKILL.md)<br>`09-groq-api` | API | AI Agent 基本功 EP04 | ✅ | 語音轉字幕 ＋ 文字清洗。**免費、不用綁信用卡** |
+| 10 | [Netlify 部署與後端](skills/10-netlify/SKILL.md)<br>`10-netlify` | API | AI Agent 基本功 EP04 | ✅ | 網頁上線 ＋ 用 Functions 把金鑰藏在後端 |
 
 **影片對照補充**
 
