@@ -1,9 +1,9 @@
 ---
-name: opencode-groq-whisper
+name: opencode-groq-api
 description: 【尚未撰寫｜佔位檔】用 Groq Whisper 把語音轉成字幕檔。說「語音轉字幕」「影片上字幕」「做逐字稿」「Whisper」時載入，並告知使用者本包尚未完成。
 ---
 
-# 懶人包 #06：Groq Whisper 語音轉字幕
+# 懶人包 #09：Groq API 語音轉字幕與文字清洗
 
 ## 🚧 這一包還沒寫好
 
