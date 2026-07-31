@@ -18,7 +18,7 @@ function Add-ValidationWarning([string]$Message) {
 
 $skillMappings = @(
     [pscustomobject]@{ SourceName = "00-env-setup"; InstalledName = "opencode-env-setup" },
-    [pscustomobject]@{ SourceName = "01-notebooklm"; InstalledName = "opencode-notebooklm" },
+    [pscustomobject]@{ SourceName = "01-gemini-notebook"; InstalledName = "opencode-gemini-notebook" },
     [pscustomobject]@{ SourceName = "02-github"; InstalledName = "opencode-github" },
     [pscustomobject]@{ SourceName = "03-obsidian"; InstalledName = "opencode-obsidian" },
     [pscustomobject]@{ SourceName = "04-firebase"; InstalledName = "opencode-firebase" },
@@ -34,9 +34,9 @@ if (Test-Path -LiteralPath "SKILL.md") {
 if (-not (Test-Path -LiteralPath "INSTALL.md")) {
     Add-ValidationError "Missing INSTALL.md entry guide."
 }
-foreach ($retiredPath in @("04-第二大腦設定指南.md", "skills/04-second-brain")) {
+foreach ($retiredPath in @("01-連接-NotebookLM.md", "skills/01-notebooklm", "04-第二大腦設定指南.md", "skills/04-second-brain")) {
     if (Test-Path -LiteralPath $retiredPath) {
-        Add-ValidationError "Retired second-brain content still exists: $retiredPath"
+        Add-ValidationError "Retired content still exists: $retiredPath"
     }
 }
 
@@ -113,7 +113,7 @@ Get-ChildItem -LiteralPath $root -File -Filter "*.md" |
         }
         $version = "v$($Matches[1])"
         $chapterVersions[$_.Name.Substring(0, 2)] = $version
-        $currentRow = [regex]::Escape(("| 2026-07-17 | {0} |" -f $version))
+        $currentRow = '\|\s+\d{4}-\d{2}-\d{2}\s+\|\s+' + [regex]::Escape($version) + '\s+\|'
         if ($content -notmatch $currentRow) {
             Add-ValidationError "$($_.Name) changelog is missing current version $version."
         }
@@ -185,7 +185,8 @@ if (-not (Test-Path -LiteralPath $syncScript -PathType Leaf)) {
 
 $forbiddenChecks = @(
     @{ Pattern = '"command": \["<nlm.+>", "--transport", "stdio"\]'; Message = "Obsolete nlm MCP command remains." },
-    @{ Pattern = '^\s*nlm skill install opencode\s*$'; Message = "NotebookLM setup still installs the extra nlm-skill." },
+    @{ Pattern = '^\s*nlm skill install opencode\s*$'; Message = "Gemini Notebook setup still installs the extra nlm-skill." },
+    @{ Pattern = '^\s*(uv tool|pip|pipx) (install|upgrade|uninstall) gemini-notebook-mcp-cli\s*$'; Message = "A command uses the renamed GitHub repository as a package name; keep notebooklm-mcp-cli until upstream changes the package." },
     @{ Pattern = 'type %USERPROFILE%\\\.openai\.env'; Message = "A command still prints the complete .openai.env file." },
     @{ Pattern = '^### .+two.+manual download'; Message = "README still has a duplicate method-two heading." }
 )

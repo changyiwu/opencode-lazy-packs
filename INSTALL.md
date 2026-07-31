@@ -10,7 +10,7 @@
 powershell -ExecutionPolicy Bypass -File "skills/07-install-all/install-opencode-skills.ps1" -SourceRoot "skills" -Force
 ```
 
-最終必須在 `~/.config/opencode/skills/` 看到 8 個 `opencode-*` 目錄，已退役的 `opencode-second-brain` 不得留存，且 `~/.agents/skills/` 不得留下本懶人包副本。
+最終必須在 `~/.config/opencode/skills/` 看到 8 個 `opencode-*` 目錄，已退役的 `opencode-notebooklm` 與 `opencode-second-brain` 不得留存，且 `~/.agents/skills/` 不得留下本懶人包副本。
 
 若沒有完整 repo，才使用 `npx skills` 取得暫存來源；完成同步後，隨附腳本會刪除 `~/.agents/skills/` 中本懶人包的新舊名稱副本，並在目錄變空時一併移除空目錄。
 
@@ -19,7 +19,7 @@ powershell -ExecutionPolicy Bypass -File "skills/07-install-all/install-opencode
 | 編號 | Skill | 說明 | 前置需求 |
 |------|-------|------|---------|
 | 00 | `opencode-env-setup` | Node.js LTS、OpenCode、uv、模型登入 | 無 |
-| 01 | `opencode-notebooklm` | NotebookLM MCP | #00 |
+| 01 | `opencode-gemini-notebook` | Gemini Notebook MCP | #00 |
 | 02 | `opencode-github` | Git、GitHub CLI 與登入 | 無 |
 | 03 | `opencode-obsidian` | Obsidian MCPVault | Node.js、vault |
 | 04 | `opencode-firebase` | Firebase MCP | Node.js |

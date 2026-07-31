@@ -1,13 +1,15 @@
-# OpenCode 懶人包 #01：連接 NotebookLM
+# OpenCode 懶人包 #01：連接 Gemini Notebook
 
-> 版本：v0.4
-> 更新日期：2026-07-17
+> 版本：v0.5
+> 更新日期：2026-08-01
 
 ## 這個懶人包會幫你做什麼？
 
-安裝 `notebooklm-mcp-cli`，登入 NotebookLM，並把真正的 `notebooklm-mcp` server 連接到 OpenCode。
+安裝 `notebooklm-mcp-cli`，登入 Gemini Notebook（原 NotebookLM），並把真正的 `notebooklm-mcp` server 連接到 OpenCode。
 
-> 這是使用 NotebookLM 內部 API 的社群工具，不是 Google 官方 API；個人或實驗用途應了解其介面可能變動。
+> Google 已將產品改名為 Gemini Notebook；社群專案也已移至 `jacob-bd/gemini-notebook-mcp-cli`。目前 PyPI 套件、CLI 與 MCP 執行檔為相容性仍分別沿用 `notebooklm-mcp-cli`、`nlm`、`notebooklm-mcp`，不要自行改寫這些技術名稱。
+>
+> 這是使用 Gemini Notebook 內部 API 的社群工具，不是 Google 官方 API；個人或實驗用途應了解其介面可能變動。
 
 ## 執行原則
 
@@ -28,6 +30,8 @@ uv tool install notebooklm-mcp-cli
 ```bash
 uv tool upgrade notebooklm-mcp-cli
 ```
+
+Gemini Notebook 新網域支援需要 `notebooklm-mcp-cli` 0.9.3 以上；新安裝或更新時應使用可取得的最新版。
 
 確認兩個不同用途的執行檔都存在：
 
@@ -55,7 +59,7 @@ nlm doctor
 nlm setup add opencode
 ```
 
-不要執行 `nlm skill install opencode`。該指令會額外建立 `~/.config/opencode/skills/nlm-skill/`；NotebookLM MCP 已由 `nlm setup add opencode` 提供，不需要再安裝這個額外 Skill。
+不要執行 `nlm skill install opencode`。該指令會額外建立 `~/.config/opencode/skills/nlm-skill/`；Gemini Notebook MCP 已由 `nlm setup add opencode` 提供，不需要再安裝這個額外 Skill。
 
 若自動設定失敗，再編輯 `~/.config/opencode/opencode.json`，將 MCP server 指向 `notebooklm-mcp`，不是 `nlm`：
 
@@ -80,7 +84,7 @@ nlm setup add opencode
 opencode mcp list
 ```
 
-重新開啟 OpenCode，要求「列出我的 NotebookLM 筆記本」。功能測試若要建立臨時 notebook，完成後詢問使用者是否刪除。
+重新開啟 OpenCode，要求「列出我的 Gemini Notebook 筆記本」。功能測試若要建立臨時 notebook，完成後詢問使用者是否刪除。
 
 ## 復原
 
@@ -95,7 +99,7 @@ uv tool uninstall notebooklm-mcp-cli
 ## 完成回報格式
 
 ```md
-## NotebookLM 連接完成
+## Gemini Notebook 連接完成
 
 - 套件版本：xxx
 - 登入狀態：成功 / 失敗
@@ -109,6 +113,7 @@ uv tool uninstall notebooklm-mcp-cli
 
 | 日期 | 版本 | 更新內容 |
 |------|------|---------|
+| 2026-08-01 | v0.5 | 更新 Gemini Notebook 品牌與新網域最低版本，保留既有套件、CLI 與 MCP 執行檔名稱 |
 | 2026-07-17 | v0.4 | OpenCode 僅設定 NotebookLM MCP，不再額外安裝 nlm-skill |
 | 2026-07-17 | v0.3 | 改用 notebooklm-mcp、nlm setup/skill 的 OpenCode 支援，移除過時 EXE 與指令說明 |
 | 2026-06-12 | v0.2 | 改用 uv tool、補 doctor 與復原流程 |

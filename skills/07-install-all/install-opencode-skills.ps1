@@ -10,7 +10,7 @@ $ErrorActionPreference = "Stop"
 
 $skillMappings = @(
     [pscustomobject]@{ SourceName = "00-env-setup"; InstalledName = "opencode-env-setup" },
-    [pscustomobject]@{ SourceName = "01-notebooklm"; InstalledName = "opencode-notebooklm" },
+    [pscustomobject]@{ SourceName = "01-gemini-notebook"; InstalledName = "opencode-gemini-notebook" },
     [pscustomobject]@{ SourceName = "02-github"; InstalledName = "opencode-github" },
     [pscustomobject]@{ SourceName = "03-obsidian"; InstalledName = "opencode-obsidian" },
     [pscustomobject]@{ SourceName = "04-firebase"; InstalledName = "opencode-firebase" },
@@ -18,8 +18,8 @@ $skillMappings = @(
     [pscustomobject]@{ SourceName = "06-draw"; InstalledName = "opencode-draw" },
     [pscustomobject]@{ SourceName = "07-install-all"; InstalledName = "opencode-install-all" }
 )
-$retiredSourceNames = @("04-second-brain")
-$retiredInstalledNames = @("opencode-second-brain")
+$retiredSourceNames = @("01-notebooklm", "04-second-brain")
+$retiredInstalledNames = @("opencode-notebooklm", "opencode-second-brain")
 
 $managedSourceRoot = Join-Path $HOME ".agents\skills"
 $scriptSkillRoot = Split-Path -Parent $PSCommandPath
@@ -66,6 +66,13 @@ if (-not (Test-Path -LiteralPath $SourceRoot -PathType Container)) {
 $sourceRootPath = (Resolve-Path -LiteralPath $SourceRoot).Path.TrimEnd('\', '/')
 New-Item -ItemType Directory -Path $TargetRoot -Force | Out-Null
 $targetRootPath = (Resolve-Path -LiteralPath $TargetRoot).Path.TrimEnd('\', '/')
+
+$retiredTargetSkills = @($retiredInstalledNames | Where-Object {
+    Test-Path -LiteralPath (Join-Path $targetRootPath $_) -PathType Container
+})
+if ($retiredTargetSkills.Count -gt 0) {
+    throw "Retired OpenCode skill(s) still exist in the target directory: $($retiredTargetSkills -join ', '). Remove them after explicit approval, then run the sync again."
+}
 
 $sourceSkills = @{}
 foreach ($mapping in $skillMappings) {
@@ -152,13 +159,6 @@ foreach ($mapping in $skillMappings) {
 
 if ($verificationErrors.Count -gt 0) {
     throw "Sync verification failed: $($verificationErrors -join '; ')"
-}
-
-$retiredTargetSkills = @($retiredInstalledNames | Where-Object {
-    Test-Path -LiteralPath (Join-Path $targetRootPath $_) -PathType Container
-})
-if ($retiredTargetSkills.Count -gt 0) {
-    throw "Retired OpenCode skill(s) still exist in the target directory: $($retiredTargetSkills -join ', '). Remove them after explicit approval, then run the sync again."
 }
 
 $removedManagedSkills = New-Object System.Collections.Generic.List[string]

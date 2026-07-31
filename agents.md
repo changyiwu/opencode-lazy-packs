@@ -24,8 +24,10 @@ OpenCode 專用的懶人包倉庫。與 `claude-code-lazy-packs/`、`codex-lazy-
 - [x] 階段一：教學章節與 Skills 成形
 - [x] 階段二：移除第二大腦設定指南與 `opencode-second-brain` Skill，Firebase／瀏覽器／生圖／全部安裝重編為 #04～#07
 - [x] 階段三：發布驗證通過，repo 現有 8 個 `opencode-*` Skills；隔離安裝測試成功
-- [ ] 階段四：執行 `skills/07-install-all/install-opencode-skills.ps1` 同步 OpenCode 全域 Skills
-- [ ] 階段五：移除全域舊副本 `opencode-second-brain`，驗證全域目錄只有預期的 8 個 Skills 且無舊編號副本
+- [x] 階段四：NotebookLM 品牌更新為 Gemini Notebook，保留相容的套件／CLI／MCP 技術名稱
+- [x] 階段五：執行 `skills/07-install-all/install-opencode-skills.ps1` 同步 OpenCode 全域 Skills
+- [x] 階段六：移除全域舊副本 `opencode-notebooklm` 與 `opencode-second-brain`，驗證全域目錄只有預期的 8 個 Skills 且無舊編號副本
+- [ ] 階段七：重啟使用 Gemini Notebook MCP 的 Agent 後，重新驗證 `nlm login --check` 與筆記本讀取
 
 ## 資料夾結構
 
@@ -34,7 +36,7 @@ opencode-lazy-packs/
 ├─ INSTALL.md             # 懶人包入口說明（根目錄不可放 SKILL.md，否則 npx 只發現一個 Skill）
 ├─ README.md
 ├─ 00-環境建置.md
-├─ 01-連接-NotebookLM.md
+├─ 01-連接-Gemini-Notebook.md
 ├─ 02-連接-GitHub.md
 ├─ 03-建立第二大腦-Obsidian.md
 ├─ 04-連接-Firebase.md
@@ -70,7 +72,7 @@ opencode-lazy-packs/
 - `generated/` 僅放本機測試輸出；需要保留的展示圖移到 `examples/`
 - **不要**把 Skills 安裝到 `~/.agents/skills/` 當作 OpenCode 的完成位置
 - `opencode-draw` 必須使用自身的 `draw.py`，不得借用 Codex 版本
-- 安裝器若偵測到已退役的 `opencode-second-brain` 會停止；取得刪除確認後清理，再重新同步
+- 安裝器若偵測到已退役的 `opencode-notebooklm` 或 `opencode-second-brain` 會在複製前停止；取得刪除確認後清理，再重新同步
 
 ## 安全邊界
 
@@ -82,3 +84,5 @@ opencode-lazy-packs/
 - 2026-07-22：移除第二大腦設定指南與對應 Skill，將 Firebase、瀏覽器、生圖與全部安裝重編為 #04～#07；專案工作筆記改為 `opencode-lazy-packs/專案工作流程.md`，8-Skill 驗證已通過。
 - 2026-07-22：移除內建工作流程 Skill，將生圖與全部安裝 Skill 重編為 #07、#08，並同步安裝器與驗證規則；發布驗證已通過。
 - 2026-07-24：專案藍圖改用標準範本格式（補上路線圖 checklist 與同步層級表，原「同步對照表」併入）。
+- 2026-08-01：將 NotebookLM 品牌與 Skill 名稱更新為 Gemini Notebook；保留上游仍在使用的 `notebooklm-mcp-cli`、`nlm`、`notebooklm-mcp` 技術名稱，並加入舊 Skill 名稱遷移防呆。
+- 2026-08-01：本機 `nlm` 升級至 0.9.4；刪除退役的 `opencode-notebooklm`，同步並以檔案集合、SHA-256、frontmatter 與 BOM 驗證 8 個 OpenCode 全域 Skills。
