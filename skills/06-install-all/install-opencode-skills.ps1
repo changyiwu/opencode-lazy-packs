@@ -14,12 +14,11 @@ $skillMappings = @(
     [pscustomobject]@{ SourceName = "02-github"; InstalledName = "opencode-github" },
     [pscustomobject]@{ SourceName = "03-obsidian"; InstalledName = "opencode-obsidian" },
     [pscustomobject]@{ SourceName = "04-firebase"; InstalledName = "opencode-firebase" },
-    [pscustomobject]@{ SourceName = "05-browser"; InstalledName = "opencode-browser" },
-    [pscustomobject]@{ SourceName = "06-draw"; InstalledName = "opencode-draw" },
-    [pscustomobject]@{ SourceName = "07-install-all"; InstalledName = "opencode-install-all" }
+    [pscustomobject]@{ SourceName = "05-draw"; InstalledName = "opencode-draw" },
+    [pscustomobject]@{ SourceName = "06-install-all"; InstalledName = "opencode-install-all" }
 )
-$retiredSourceNames = @("01-notebooklm", "04-second-brain")
-$retiredInstalledNames = @("opencode-notebooklm", "opencode-second-brain")
+$retiredSourceNames = @("01-notebooklm", "04-second-brain", "05-browser")
+$retiredInstalledNames = @("opencode-notebooklm", "opencode-second-brain", "opencode-browser")
 
 $managedSourceRoot = Join-Path $HOME ".agents\skills"
 $scriptSkillRoot = Split-Path -Parent $PSCommandPath
@@ -186,7 +185,7 @@ if (-not $KeepManagedSource -and (Test-Path -LiteralPath $managedSourceRoot -Pat
     }
 }
 
-Write-Host "Sync complete: 8 opencode-* skills installed to $targetRootPath" -ForegroundColor Green
+Write-Host "Sync complete: 7 opencode-* skills installed to $targetRootPath" -ForegroundColor Green
 if ($removedManagedSkills.Count -gt 0) {
     Write-Host "Cleaned managed copies from ~/.agents/skills: $($removedManagedSkills -join ', ')" -ForegroundColor Green
 }

@@ -23,11 +23,12 @@ OpenCode 專用的懶人包倉庫。與 `claude-code-lazy-packs/`、`codex-lazy-
 
 - [x] 階段一：教學章節與 Skills 成形
 - [x] 階段二：移除第二大腦設定指南與 `opencode-second-brain` Skill，Firebase／瀏覽器／生圖／全部安裝重編為 #04～#07
-- [x] 階段三：發布驗證通過，repo 現有 8 個 `opencode-*` Skills；隔離安裝測試成功
+- [x] 階段三：發布驗證通過，repo 曾有 8 個 `opencode-*` Skills；隔離安裝測試成功
 - [x] 階段四：NotebookLM 品牌更新為 Gemini Notebook，保留相容的套件／CLI／MCP 技術名稱
-- [x] 階段五：執行 `skills/07-install-all/install-opencode-skills.ps1` 同步 OpenCode 全域 Skills
+- [x] 階段五：執行當時的 `skills/07-install-all/install-opencode-skills.ps1` 同步 OpenCode 全域 Skills
 - [x] 階段六：移除全域舊副本 `opencode-notebooklm` 與 `opencode-second-brain`，驗證全域目錄只有預期的 8 個 Skills 且無舊編號副本
-- [ ] 階段七：重啟使用 Gemini Notebook MCP 的 Agent 後，重新驗證 `nlm login --check` 與筆記本讀取
+- [x] 階段七：移除瀏覽器控制教學與 `opencode-browser` Skill，生圖與全部安裝重編為 #05～#06；repo 改為 7 個 Skills，全域 `opencode-browser` 已移除
+- [ ] 階段八：重啟使用 Gemini Notebook MCP 的 Agent 後，重新驗證 `nlm login --check` 與筆記本讀取
 
 ## 資料夾結構
 
@@ -40,8 +41,7 @@ opencode-lazy-packs/
 ├─ 02-連接-GitHub.md
 ├─ 03-建立第二大腦-Obsidian.md
 ├─ 04-連接-Firebase.md
-├─ 05-安裝瀏覽器控制.md
-├─ 06-生圖.md
+├─ 05-生圖.md
 ├─ skills/                # 一鍵安裝用子技能
 ├─ scripts/               # 輔助腳本（draw.py、validate-lazy-pack.ps1）
 ├─ generated/             # 本機測試輸出（gitignore）
@@ -72,7 +72,7 @@ opencode-lazy-packs/
 - `generated/` 僅放本機測試輸出；需要保留的展示圖移到 `examples/`
 - **不要**把 Skills 安裝到 `~/.agents/skills/` 當作 OpenCode 的完成位置
 - `opencode-draw` 必須使用自身的 `draw.py`，不得借用 Codex 版本
-- 安裝器若偵測到已退役的 `opencode-notebooklm` 或 `opencode-second-brain` 會在複製前停止；取得刪除確認後清理，再重新同步
+- 安裝器若偵測到已退役的 `opencode-notebooklm`、`opencode-second-brain` 或 `opencode-browser` 會在複製前停止；取得刪除確認後清理，再重新同步
 
 ## 安全邊界
 
@@ -86,3 +86,4 @@ opencode-lazy-packs/
 - 2026-07-24：專案藍圖改用標準範本格式（補上路線圖 checklist 與同步層級表，原「同步對照表」併入）。
 - 2026-08-01：將 NotebookLM 品牌與 Skill 名稱更新為 Gemini Notebook；保留上游仍在使用的 `notebooklm-mcp-cli`、`nlm`、`notebooklm-mcp` 技術名稱，並加入舊 Skill 名稱遷移防呆。
 - 2026-08-01：本機 `nlm` 升級至 0.9.4；刪除退役的 `opencode-notebooklm`，同步並以檔案集合、SHA-256、frontmatter 與 BOM 驗證 8 個 OpenCode 全域 Skills。
+- 2026-08-02：移除瀏覽器控制教學與 `opencode-browser` Skill，將生圖與全部安裝重編為 #05～#06；repo 與全域均改為 7 個 Skills，9 個來源／目標檔案 SHA-256、frontmatter 與 UTF-8 BOM 驗證通過。
