@@ -60,6 +60,18 @@ opencode-lazy-packs/
 | L2 | GitHub | origin：https://github.com/changyiwu/opencode-lazy-packs （公開）／upstream：`mathruffian-dot/opencode-lazy-packs` | 指定時 |
 | L3 | Obsidian | `opencode-lazy-packs/專案工作流程.md` | 有需要時 |
 
+## 三個檔案的職責（依「時效性」分家，不是依「詳細程度」）
+
+| 檔案 | 時效 | 寫入方式 | 放什麼 |
+|------|------|---------|--------|
+| `handoff.md` | **只對下一個 session 有效**，過期即丟 | 每次收工整份重寫 | 做到哪、下一步、**這次**的暫時 workaround |
+| `agents.md`（本檔） | **長期有效**，每個 session 都適用 | 只有規則本身變了才改 | 目標、路線圖、常設規則、結構 |
+| Obsidian／`git log` | **歷史**：發生過什麼、為什麼 | 只增不刪 | 決策紀錄、踩坑完整版、逐次進度 |
+
+驗收標準：**`handoff.md` 整份刪掉，不應損失任何長期資訊**——會的話代表該升級進本檔卻沒升級。
+
+**本檔不要出現的東西**：❌ `## 最近進度`／逐次工作紀錄、❌ 決策理由與踩坑完整版。2026-08-03 移除了 `## 最近進度`，內容逐條比對後已在 L3 筆記的〈🗓️ 最近更動紀錄〉——**是主動移除，不是遺漏，不要補回來**。踩過的坑只把**結論**收斂成一條祈使句寫進〈工作約定〉，原因留 L3。
+
 ## 工作約定
 
 - 任何 Agent、任何電腦：**開工先讀 `handoff.md`，收工必更新 `handoff.md`**
@@ -78,12 +90,3 @@ opencode-lazy-packs/
 
 - Commit 前檢查敏感資訊（API key 等），特別確認 `.openai.env` 是否被 git 追蹤
 - 不提交 `.env`、token、密碼、憑證或個人本機代理設定
-
-## 最近進度
-
-- 2026-07-22：移除第二大腦設定指南與對應 Skill，將 Firebase、瀏覽器、生圖與全部安裝重編為 #04～#07；專案工作筆記改為 `opencode-lazy-packs/專案工作流程.md`，8-Skill 驗證已通過。
-- 2026-07-22：移除內建工作流程 Skill，將生圖與全部安裝 Skill 重編為 #07、#08，並同步安裝器與驗證規則；發布驗證已通過。
-- 2026-07-24：專案藍圖改用標準範本格式（補上路線圖 checklist 與同步層級表，原「同步對照表」併入）。
-- 2026-08-01：將 NotebookLM 品牌與 Skill 名稱更新為 Gemini Notebook；保留上游仍在使用的 `notebooklm-mcp-cli`、`nlm`、`notebooklm-mcp` 技術名稱，並加入舊 Skill 名稱遷移防呆。
-- 2026-08-01：本機 `nlm` 升級至 0.9.4；刪除退役的 `opencode-notebooklm`，同步並以檔案集合、SHA-256、frontmatter 與 BOM 驗證 8 個 OpenCode 全域 Skills。
-- 2026-08-02：移除瀏覽器控制教學與 `opencode-browser` Skill，將生圖與全部安裝重編為 #05～#06；repo 與全域均改為 7 個 Skills，9 個來源／目標檔案 SHA-256、frontmatter 與 UTF-8 BOM 驗證通過。
