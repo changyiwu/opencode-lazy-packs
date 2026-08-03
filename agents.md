@@ -90,3 +90,5 @@ opencode-lazy-packs/
 
 - Commit 前檢查敏感資訊（API key 等），特別確認 `.openai.env` 是否被 git 追蹤
 - 不提交 `.env`、token、密碼、憑證或個人本機代理設定
+- **`notebooklm-mcp-cli`、`nlm`、`notebooklm-mcp` 仍是上游有效的技術識別**，不可因產品改名而改錯
+- **Google Drive 的空目錄可能帶 `ReadOnly` 屬性**：刪除前先確認目錄為空、路徑位於專案內，再清除精確目標的屬性
