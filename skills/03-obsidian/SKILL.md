@@ -11,9 +11,20 @@ description: 連接 Obsidian，讓 OpenCode 讀寫第二大腦筆記。說「連
 
 ### 1. 找到 Obsidian vault 路徑
 搜尋含 `.obsidian` 子資料夾的目錄：
+
+**Windows（PowerShell）**
 ```powershell
 Get-ChildItem -Path "$env:USERPROFILE\OneDrive" -Recurse -Directory |
   Where-Object { Test-Path (Join-Path $_.FullName ".obsidian") }
+```
+
+**macOS / Linux**
+```bash
+for root in ~/Library/CloudStorage ~/Library/"Mobile Documents" ~/Documents ~/OneDrive; do
+  [ -d "$root" ] || continue
+  find "$root" -maxdepth 5 -type d -name .obsidian 2>/dev/null |
+    while read -r d; do dirname "$d"; done
+done
 ```
 確認使用者這是主要 vault。
 
