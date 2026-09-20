@@ -46,7 +46,7 @@ opencode-lazy-packs/
 ├─ scripts/               # 輔助腳本（draw.py、validate-lazy-pack.ps1）
 ├─ generated/             # 本機測試輸出（gitignore）
 ├─ examples/              # 精選展示輸出
-├─ agents.md              # 本檔：專案藍圖
+├─ AGENTS.md              # 本檔：專案藍圖
 ├─ handoff.md             # 交接檔（每次收工必更新）
 ├─ .agents/  .gitignore
 └─ LICENSE
@@ -56,7 +56,7 @@ opencode-lazy-packs/
 
 | 層級 | 平台 | 位置 | 讀取時機 |
 |------|------|------|---------|
-| L1 | 本地（GDrive） | `agents.md`＋`handoff.md` | 每個 session |
+| L1 | 本地（GDrive） | `AGENTS.md`＋`handoff.md` | 每個 session |
 | L2 | GitHub | origin：https://github.com/changyiwu/opencode-lazy-packs （公開）／upstream：`mathruffian-dot/opencode-lazy-packs` | 指定時 |
 | L3 | Obsidian | `opencode-lazy-packs/專案工作流程.md` | 有需要時 |
 
@@ -65,7 +65,7 @@ opencode-lazy-packs/
 | 檔案 | 時效 | 寫入方式 | 放什麼 |
 |------|------|---------|--------|
 | `handoff.md` | **只對下一個 session 有效**，過期即丟 | 每次收工整份重寫 | 做到哪、下一步、**這次**的暫時 workaround |
-| `agents.md`（本檔） | **長期有效**，每個 session 都適用 | 只有規則本身變了才改 | 目標、路線圖、常設規則、結構 |
+| `AGENTS.md`（本檔） | **長期有效**，每個 session 都適用 | 只有規則本身變了才改 | 目標、路線圖、常設規則、結構 |
 | Obsidian／`git log` | **歷史**：發生過什麼、為什麼 | 只增不刪 | 決策紀錄、踩坑完整版、逐次進度 |
 
 驗收標準：**`handoff.md` 整份刪掉，不應損失任何長期資訊**——會的話代表該升級進本檔卻沒升級。
